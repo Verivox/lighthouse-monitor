@@ -1,0 +1,5 @@
+[lighthouse:children]
+lighthouse-master
+
+[lighthouse-master]
+lighthouse-01.verivox.ads

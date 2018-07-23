@@ -1,0 +1,62 @@
+---
+vsphere_linux_customizations_dns_servers:
+  - '10.1.4.1'
+  - '10.1.4.1'
+vsphere_linux_customizations_domain: 'verivox.ads'
+vsphere_linux_hostname: 'deheissrevc01.verivox.ads'
+vsphere_linux_username: 'administrator@vsphere.local'
+vsphere_linux_password: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          65313762356131396165326433643532323261313762383638633739383362316362356438663361
+          6134343431393433343165653866303464393437333533650a636462663432363966303833376366
+          38333132613238366561623931643631353463376639653937313638666661633066636336393434
+          3266333739616335640a323635623065393264303235623764643335326434383835376163643564
+          3165
+vsphere_linux_template: 'centos-7-5-nocloudinit-x86_64'
+vsphere_linux_validate_certs: 'no'
+vsphere_linux_wait_for_ip_address: 'yes'
+vsphere_linux_datacenter: 'Heidelberg'
+vsphere_linux_cluster: 'VSAN'
+vsphere_linux_folder: '/vm'
+vsphere_linux_resource_pool: 'SRE'
+vsphere_linux_networks_name: 'DPortGroup (ephermal)'
+vsphere_linux_network_type: 'dhcp'
+vsphere_linux_state: poweredon
+vsphere_linux_disk:
+- { type: thin, size_mb: '{{ (15 * 1024) }}', datastore: 'vsanDatastore' }
+- { type: thin, size_mb: '{{ (10 * 1024) }}', datastore: 'vsanDatastore' }
+- { type: thin, size_mb: '{{ (5 * 1024) }}', datastore: 'vsanDatastore' }
+  
+vsphere_linux_hardware_num_cpus: 4
+vsphere_linux_hardware_memory_mb: '4096'
+vsphere_linux_hardware_hotadd_cpu: 'true'
+vsphere_linux_hardware_memory: 'true'
+
+couchbase_docker_name: '{{ inventory_hostname_short }}'
+couchbase_docker_image: 'couchbase:community-5.0.1'
+couchbase_docker_server_ports:
+  - 8091:8091
+  - 8092:8092
+  - 8093:8093
+  - 8094:8094
+  - 11210:11210
+  - 4369:4369
+couchbase_docker_volume: 
+  - /opt/couchbase/var:/opt/couchbase/var
+couchbase_main_cluster_config_username: Administrator
+couchbase_main_cluster_config_password: password
+couchbase_services: kv,n1ql,index
+couchbase_bucket_flush_enabled: 1
+couchbase_bucket_threads_number: 3
+couchbase_bucket_replica_index: 0
+couchbase_bucket_replica_number: 1
+couchbase_bucket_eviction_policy: valueOnly
+couchbase_bucket_ramquota_mb: 597
+couchbase_bucket_bucket_type: membase
+couchbase_bucket_name: kfz_staging
+couchbase_bucket_auth_type: sasl
+couchbase_bucket_sasl_password:
+
+## joins over ,ns_1@
+couchbase_rebalance_known_nodes: 'ns_1@{{ groups["couchbase"] | join("%2Cns_1%40") }}'
+couchbase_rebalance_ejected_nodes: ''

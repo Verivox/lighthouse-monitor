@@ -1,0 +1,10 @@
+[couchbase:children]
+couchbase-main
+couchbase-nodes
+
+[couchbase-main]
+defraskfzcb01.staging.portal
+
+[couchbase-nodes]
+defraskfzcb02.staging.portal
+defraskfzcb03.staging.portal
