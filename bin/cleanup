@@ -1,0 +1,71 @@
+#!/usr/bin/env node
+const config = require('../config/default')
+const debug = require('debug')
+const fs = require('fs')
+const program = require('commander')
+const { Reports } = require('../src/reports')
+const { ReportCleanup } = require('../src/report-cleanup')
+const packageJson = require('../package.json')
+
+
+// bootstraps programs and runs submodules
+async function run(options) {
+    debug('LIGHTMON:CLEANUP:DEBUG')('Setting up reports handler...')
+    options.reports = await Reports.setup(options.reportDir)
+    const cleanup = new ReportCleanup(options)
+
+    debug('LIGHTMON:CLEANUP:INFO')('Starting cleanup of reports')
+    await cleanup.clean()
+
+    debug('LIGHTMON:CLEANUP:INFO')('Starting deletion of empty directories')
+    await cleanup.purgeEmptyDirs()
+}
+
+
+program
+    .version(packageJson.version, '-V, --version')
+    .option('-d, --dry-run', 'do not actually do something')
+    .option('-r, --report-dir <reportDir>', 'report directory to clean up')
+    .option('--retain-weekly <days>', 'reports older than <days> are crunched to weekly resolution', parseInt)
+    .option('--retain-daily <days>', 'reports older than <days> are crunched to daily resolution', parseInt)
+    .option('-v, --verbose', 'show debugging information')
+    .parse(process.argv)
+
+
+if (program.retainWeekly === undefined && program.retainDaily === undefined) {
+    console.error('ERROR: At least one option --retain-weekly or --retain-daily is required. Exiting.\n')
+    program.outputHelp()
+    process.exit(1)
+}
+
+if (program.retainWeekly !== undefined && isNaN(program.retainWeekly) || program.retainDaily !== undefined && isNaN(program.retainDaily)) {
+    console.error('ERROR: --retain-weekly and --retain-daily require a number. Exiting.\n')
+    program.outputHelp()
+    process.exit(2)
+}
+
+if (program.retainWeekly && program.retainDaily && program.retainDaily >= program.retainWeekly) {
+    console.error('ERROR: given both options, --retainDaily cannot be greater or equal than --retainWeekly. Exiting.\n')
+    process.exit(3)
+}
+
+if (program.verbose) {
+    debug.enable('LIGHTMON:*')
+}
+
+const reportDir = program.reportDir || config.reportDir
+
+if (!fs.existsSync(reportDir) || !fs.statSync(reportDir).isDirectory()) {
+    console.error(`ERROR: reportDir does not exist or is not a directory: ${reportDir}. Exiting.\n`)
+    process.exit(4)
+}
+
+
+run(
+    {
+        dryRun: program.dryRun !== undefined ? true : false,
+        reportDir,
+        retainDaily: program.retainDaily,
+        retainWeekly: program.retainWeekly
+    }
+).catch(console.error)

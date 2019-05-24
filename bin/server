@@ -1,0 +1,12 @@
+#!/usr/bin/env node
+const { Webserver, StaticFiles, HtmlReport } = require('../src/webserver')
+const { WebserverOptions } = require('../config/default')
+
+// bootstraps programs and runs submodules
+async function run() {
+    new StaticFiles({ ...WebserverOptions, Webserver })
+    new HtmlReport({ Webserver })
+    new Webserver({ ...WebserverOptions }).start()
+}
+
+run().catch(console.error)

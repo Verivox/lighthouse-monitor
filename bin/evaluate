@@ -1,0 +1,64 @@
+#!/usr/bin/env node
+let config = require('../config/default')
+const debug = require('debug')
+const fs = require('fs-extra')
+const program = require('commander')
+const { evaluate } = require('../src/evaluate')
+const lockfile = require('proper-lockfile')
+const join = require('path').join
+
+const packageJson = require('../package.json')
+
+
+function validatePreset(preset, _config) {
+    return preset === undefined ?
+        true :
+        new RegExp('^(' + Object.values(_config.presets).map(p => p.preset).join('|') + ')$').test(preset)
+}
+
+
+async function run(_config) {
+    if (program.force === undefined && _config.lockFile) {
+        try {
+            await fs.ensureFile(_config.lockFile)
+            await lockfile.lockSync(_config.lockFile, _config.lockFileOptions || {})
+        } catch (e) {
+            console.error(`Could not acquire lock - there seems to be another process running. Error was:`)
+            console.error(e)
+            process.exit(2)
+        }
+    }
+
+    await evaluate(_config)
+}
+
+
+program
+    .version(packageJson.version, '-V, --version')
+    .option('-f, --force', 'ignore lockfile')
+    .option('-p, --preset <preset>', `run only preset (${Object.values(config.presets).map(p => p.preset).join('|')})`)
+    .option('-c, --config <file>', 'use this config file instead of config/default.js')
+    .option('-v, --verbose', 'show debugging information')
+    .parse(process.argv)
+
+
+if (program.verbose) {
+    debug.enable('LIGHTMON:*')
+}
+
+if (program.config) {
+    config = require(join(__dirname, '..', program.config))
+}
+
+if (!validatePreset(program.preset, config)) {
+    console.error(`Preset '${program.preset}' is unknown, exiting.`)
+    program.outputHelp()
+    process.exit(1)
+}
+
+if (program.preset) {
+    config.presets = Object.values(config.presets).filter(p => p.preset === program.preset)
+    debug('LIGHTMON:INFO')(`Restricting run to profile ${program.preset}`)
+}
+
+run(config).catch(console.error)

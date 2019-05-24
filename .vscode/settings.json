@@ -1,0 +1,7 @@
+{
+	"mocha.showInExplorer": true,
+	"mocha.files.glob": "src/**/*.spec.js",
+	"mocha.coverage": {
+		"enable": false
+	}
+}

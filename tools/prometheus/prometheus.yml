@@ -1,0 +1,21 @@
+global:
+    scrape_interval:     5s
+    evaluation_interval: 5s
+
+## A scrape configuration containing exactly one endpoint to scrape:
+## Here it's Prometheus itself.
+scrape_configs:
+    - job_name: 'prometheus'
+      static_configs:
+          - targets: ['localhost:9090']
+
+    ## This will scrape metrics file on the dock host port 3000
+    - job_name: 'lightmon'
+      static_configs:
+          - targets: ['docker.host.internal:3000']
+
+    ## if you use the push gateway instead, this is how to import it
+    - job_name: 'pushgw'
+      static_configs:
+          - targets: ['docker.host.internal:9091']
+      honor_labels: true

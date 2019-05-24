@@ -1,3 +1,0 @@
-{
-    "insecure-registries" : [ "docker-registry.verivox.ads:5000" ]
-}

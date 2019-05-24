@@ -1,0 +1,78 @@
+{
+    "name": "lightmon",
+    "version": "1.0.0",
+    "description": "A lighthouse monitor",
+    "main": "./bin/lightmon",
+    "scripts": {
+        "build": "cd frontend && npm ci && npm run build",
+        "cleanup": "cross-env DEBUG=${DEBUG:-LIGHTMON*} ./bin/cleanup",
+        "lint": "eslint src/",
+        "lint:fix": "eslint --fix src/",
+        "start": "./bin/evaluate",
+        "evaluation": "cross-env DEBUG=${DEBUG:-LIGHTMON*} npm start",
+        "frontend:preflight": "cd frontend && npm run preflight",
+        "frontend:preflight:fix": "cd frontend && npm run preflight:fix",
+        "start:debug": "node --nolazy --inspect-brk=9229 ./bin/evaluate",
+        "server": "cross-env DEBUG=${DEBUG:-LIGHTMON*} ./bin/server",
+        "server:watch": "cross-env DEBUG=${DEBUG:-LIGHTMON*} nodemon -w src/ -w config/ -w bin/ ./bin/server",
+        "update": "npm-check --skip-unused -p --ignore commander --ignore proper-lockfile",
+        "update:fix": "npm-check --skip-unused -p --ignore commander --ignore proper-lockfile -y",
+        "test": "mocha 'src/**/*.spec.js'",
+        "test:integration": "mocha 'src/**/*.integration-spec.js'",
+        "test:all": "mocha 'src/**/*[-.]spec.js'",
+        "preflight": "concurrently --names 'audit,lint,update,frontend:preflight,test' \"npm audit --production\" npm:lint npm:update npm:frontend:preflight npm:test:all",
+        "preflight:fix": "concurrently --names 'audit,lint,update,frontend:preflight:fix' \"npm audit --production --fix\" npm:lint:fix npm:update:fix npm:frontend:preflight:fix && npm run preflight"
+    },
+    "engines": {
+        "node": ">=10"
+    },
+    "engineStrict": true,
+    "repository": {
+        "type": "git",
+        "url": "git@gitlab.kumbier.it:verivox/lighthouse.git"
+    },
+    "keywords": [
+        "lighthouse",
+        "monitor",
+        "new relic",
+        "prometheus",
+        "metrics",
+        "performance"
+    ],
+    "author": "Lars Kumbier <lars@kumbier.it> (https://kumbier.it)",
+    "contributors": [
+        "Kim Almasan <kim@kumbier.it> (https://kumbier.it)"
+    ],
+    "license": "MIT",
+    "dependencies": {
+        "chokidar": "^3.0.0",
+        "chrome-launcher": "^0.10.7",
+        "commander": "^2.20.0",
+        "cross-env": "^5.2.0",
+        "debug": "^4.1.1",
+        "express": "^4.17.0",
+        "fs-extra": "^8.0.1",
+        "lighthouse": "^5.0.0",
+        "mime": "^2.4.3",
+        "moment": "^2.24.0",
+        "prom-client": "^11.3.0",
+        "proper-lockfile": "^4.1.1",
+        "request": "^2.88.0",
+        "request-promise-native": "^1.0.7"
+    },
+    "devDependencies": {
+        "chai": "^4.2.0",
+        "chai-files": "^1.4.0",
+        "chai-fs": "^2.0.0",
+        "concurrently": "^4.1.0",
+        "eslint": "^5.16.0",
+        "eslint-plugin-mocha": "^5.3.0",
+        "eslint-plugin-node": "^9.0.1",
+        "mocha": "^6.1.4",
+        "nodemon": "^1.19.0",
+        "npm-check": "^5.9.0",
+        "rimraf": "^2.6.3",
+        "sinon": "^7.3.2",
+        "sinon-chai": "^3.3.0"
+    }
+}

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title>Lighthouse Monitor Comparator</title>
+</head>
+
+<body class="mdc-typography">
+<div role="progressbar" class="mdc-linear-progress mdc-linear-progress--indeterminate">
+    <div class="mdc-linear-progress__buffering-dots"></div>
+    <div class="mdc-linear-progress__buffer"></div>
+    <div class="mdc-linear-progress__bar mdc-linear-progress__primary-bar">
+        <span class="mdc-linear-progress__bar-inner"></span>
+    </div>
+    <div class="mdc-linear-progress__bar mdc-linear-progress__secondary-bar">
+        <span class="mdc-linear-progress__bar-inner"></span>
+    </div>
+</div>
+<h5 class="mdc-typography--headline5 text-center smaller-margin">
+    Lighthouse Monitor Comparator
+    <button class="mdc-button" id="help-btn">
+        <i class="material-icons">info</i>
+    </button>
+    <button class="mdc-button" id="reset-btn">
+        <i class="material-icons">replay</i>
+    </button>
+</h5>
+
+<div class="mdc-layout-grid">
+    <div id="container" class="mdc-layout-grid__inner">
+        <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-6-desktop">
+            <div id="result-left" class="result mdc-layout-grid__inner">
+            </div>
+        </div>
+        <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-6-desktop">
+            <div id="result-right" class="result mdc-layout-grid__inner">
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal for usage of this website! -->
+<div>
+    <div class="mdc-dialog"
+         id="modal-help"
+         role="alertdialog"
+         aria-modal="true"
+         aria-labelledby="modal-label"
+         aria-describedby="modal-content"
+         aria-hidden="true">
+        <div class="mdc-dialog__container modal" id="modal-label">
+            <div class="mdc-dialog__surface">
+                <h2 class="mdc-dialog__title" style="font-size: 1.4rem">Lighthouse Monitor Comparator - Help</h2>
+                <div class="mdc-dialog__content">
+                    <p>
+                        This service runs lighthouse from a VM inside the VX Heidelberg data center against a set of
+                        urls and with a different set of profiles.
+                    </p>
+
+                    <p>
+                        You can choose different URLs and compare the reports against each other, e.g. to see a change
+                        over time or to compare two different sections of the website with each other.
+                    </p>
+
+                    <p>
+                        After choosing a report, you also have four json objects to download:
+                    </p>
+
+                    <ul class="mdc-list">
+                        <li class="mdc-list-item">
+                            <!--<a class="btn-floating btn-small orange darken-4">-->
+                            <i class="material-icons">code</i>
+                            <!--</a>-->
+                            &nbsp;The complete report as json
+                        </li>
+                        <li class="mdc-list-item">
+                            <!--<a class="btn-floating btn-small orange darken-3">-->
+                            <i class="material-icons">storage</i>
+                            <!--</a>-->
+                            <span class="mdc-list-item__text">
+                            &nbsp;Report artifacts, which can be&nbsp;
+                            <a href="https://developers.google.com/web/tools/chrome-devtools/evaluate-performance/reference#load">
+                                loaded into Chromium WebDev Tools
+                            </a>
+
+                            </span>
+                        </li>
+                        <li class="mdc-list-item">
+                            <!--<a class="btn-floating btn-small orange darken-2">-->
+                            <i class="material-icons">archive</i>
+                            </a>
+                            The currently viewed html report
+                        </li>
+                        <li class="mdc-list-item">
+                            <!--<a class="btn-floating btn-small orange darken-1">-->
+                            <i class="material-icons">settings</i>
+                            <!--</a>-->
+                            &nbsp;The lighthouse monitor configuration for this report
+                        </li>
+                    </ul>
+                </div>
+                <footer class="mdc-dialog__actions">
+                    Built by <a href="https://kumbier.it">&nbsp;KumbierIT</a>
+                    <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="close">
+                        <span class="mdc-button__label">Close</span>
+                    </button>
+                </footer>
+            </div>
+        </div>
+        <div class="mdc-dialog__scrim"></div>
+    </div>
+
+</div>
+
+<script id="tpl_result" type="text/html">
+    <iframe frameborder="off" src="/report/{{reportId}}/html"></iframe>
+
+    <button class="mdc-fab {{view}}" style="color: white;">
+        <span class="material-icons mdc-fab__icon">cloud_download</span>
+    </button>
+
+    <div class="download_menu mdc-menu mdc-menu-surface {{view}}" tabindex="">
+        <ul class="mdc-list {{view}}" role="menu" aria-hidden="true" aria-orientation="vertical">
+            <li class="mdc-list-item" role="menuitem" data-href="/report/{{reportId}}/json">
+                <i class="material-icons">code</i>
+                &nbsp;Download Report as JSON
+            </li>
+            <li class="mdc-list-item" role="menuitem" data-href="/report/{{reportId}}/download">
+                <i class="material-icons">archive</i>
+                &nbsp;Download Report as HTML
+            </li>
+            <li class="mdc-list-item" role="menuitem" data-href="/report/{{reportId}}/artifacts">
+                <i class="material-icons">storage</i>
+                &nbsp;Download Artifacts
+            </li>
+            <li class="mdc-list-item" role="menuitem" data-href="/report/{{reportId}}/config">
+                <i class="material-icons">settings</i>
+                &nbsp;Download Config
+            </li>
+        </ul>
+    </div>
+</script>
+
+<script id="tpl_input_url_options" type="text/html">
+    <option value="" disabled selected>Select an Url</option>
+    {{#urls}}
+    <option value="{{name}}" data-url="{{url}}">{{name}}</option>
+    {{/urls}}
+</script>
+
+<script id="tpl_view" type="text/html">
+    <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12">
+        <div class="mdc-layout-grid__inner">
+            <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12-tablet">
+                <div class="mdc-text-field"  id="url-text-field-{{view}}">
+                    <input type="text" id="input-url-{{view}}" class="mdc-text-field__input" autocomplete="off">
+                    <label class="mdc-floating-label" for="input-url-{{view}}">Enter an URL</label>
+                    <div class="mdc-line-ripple"></div>
+                </div>
+                <div class="mdc-menu-surface--anchor">
+                    <div id="url-menu-{{view}}" class="mdc-menu mdc-menu-surface mdc-menu-surface--fixed non-mobile-size">
+                        <ul class="mdc-list" role="menu" aria-hidden="true" aria-orientation="vertical">
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+            <div class="mdc-layout-grid__cell ">
+                <div id="input-preset-{{view}}" class="mdc-select">
+                    <i class="mdc-select__dropdown-icon"></i>
+                    <select class="mdc-select__native-control" disabled>
+                        <option value="" selected disabled>Please choose a URL first</option>
+                    </select>
+                    <label class="mdc-floating-label">Select a Preset</label>
+                    <div class="mdc-line-ripple"></div>
+                </div>
+            </div>
+            <div class="mdc-layout-grid__cell">
+                <div class="mdc-text-field" id="date-text-field-{{view}}">
+                    <input type="text" id="input-date-{{view}}" class="mdc-text-field__input" disabled autocomplete="off">
+                    <label class="mdc-floating-label" for="input-date-{{view}}">Enter a Date</label>
+                    <div class="mdc-line-ripple"></div>
+                </div>
+                <div class="mdc-menu-surface--anchor">
+                    <div id="date-menu-{{view}}" class="mdc-menu mdc-menu-surface mdc-menu-surface--fixed non-mobile-size">
+                        <ul class="mdc-list" role="menu" aria-hidden="true" aria-orientation="vertical">
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12">
+        <div id="render-{{view}}" class="render mdc-menu-surface--anchor"></div>
+    </div>
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,13 @@
+#!/usr/bin/env node
+const { Webserver, Metrics } = require('../src/webserver')
+const { WebserverOptions, prometheusMetricsFile } = require('../config/default')
+
+
+// bootstraps programs and runs submodules
+async function run() {
+    new Metrics({ Webserver, prometheusMetricsFile })
+    new Webserver(WebserverOptions).start()
+}
+
+
+run().catch(console.error)

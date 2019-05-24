@@ -1,0 +1,99 @@
+$mdc-theme-primary: #FD8A02;
+$mdc-theme-accent: $mdc-theme-primary;
+
+@import "material-icons.css";
+@import "~@material/typography/mdc-typography";
+@import "~@material/theme/mdc-theme";
+@import "~@material/layout-grid/mdc-layout-grid";
+@import "~@material/icon-button/mdc-icon-button";
+@import "~@material/ripple/mdc-ripple";
+@import "~@material/button/mdc-button";
+@import "~@material/dialog/mdc-dialog";
+@import "~@material/list/mdc-list";
+@import "~@material/select/mdc-select";
+@import "~@material/menu-surface/mdc-menu-surface";
+@import "~@material/menu/mdc-menu";
+@import "~@material/textfield/mdc-text-field";
+@import "~@material/menu-surface/mdc-menu-surface";
+@import "~@material/fab/mdc-fab";
+@import "~@material/linear-progress/mdc-linear-progress";
+
+.text-center {
+    text-align: center;
+}
+
+.result {
+    width: 100%;
+
+    iframe {
+        width: 100%;
+        height: 80vh;
+    }
+}
+
+.mdc-select {
+    width: 100%;
+
+    select {
+        -webkit-appearance: none;
+    }
+}
+
+.mdc-text-field {
+    width: 100%;
+}
+
+#container {
+    position: relative;
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 50%;
+        bottom: 0;
+        border-right: 1px solid lightgray;
+        height: 90vh;
+    }
+}
+
+
+@media (max-width: 839px) {
+    #container::after {
+        content: none;
+    }
+}
+
+.download_menu {
+    a {
+        text-decoration: none;
+        color: black;
+        cursor: auto;
+    }
+
+}
+
+.mdc-fab {
+    position: absolute;
+    bottom: 1rem;
+    left: 1rem;
+}
+
+.smaller-margin {
+    margin-top: 10px;
+    margin-bottom: 0;
+}
+
+@media (min-width: 700px) {
+    .non-mobile-size {
+        max-width: 33%;
+    }
+}
+
+body {
+    margin: 0;
+}
+
+iframe {
+    border: none;
+}

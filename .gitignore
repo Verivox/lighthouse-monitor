@@ -1,4 +1,8 @@
-*.retry
-/.vscode
-*.env
-/roles*
+/.idea/
+/config/local*.*
+node_modules/
+/public/metrics/
+/reports/
+/tmp/
+*.local.js
+.*.sw[op]

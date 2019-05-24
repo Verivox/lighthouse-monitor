@@ -1,0 +1,43 @@
+{
+    "name": "lightmon-frontend",
+    "version": "1.0.0",
+    "description": "",
+    "private": true,
+    "scripts": {
+        "start": "webpack --watch",
+        "build": "webpack --mode=production",
+        "preflight": "npm-check -p --skip-unused && npm audit",
+        "preflight:fix": "npm-check -p --skip-unused -y && npm audit --fix"
+    },
+    "author": "",
+    "license": "MIT",
+    "devDependencies": {
+        "@material/button": "^2.0.0",
+        "@material/dialog": "^2.0.0",
+        "@material/fab": "^2.0.0",
+        "@material/icon-button": "^2.0.0",
+        "@material/layout-grid": "^0.41.0",
+        "@material/linear-progress": "^1.1.0",
+        "@material/list": "^2.0.0",
+        "@material/menu": "^2.0.0",
+        "@material/menu-surface": "^1.1.1",
+        "@material/ripple": "^2.0.0",
+        "@material/select": "^2.0.0",
+        "@material/textfield": "^2.1.0",
+        "@material/theme": "^1.1.0",
+        "@material/typography": "^1.0.0",
+        "css-loader": "^2.1.1",
+        "dayjs": "^1.8.14",
+        "eslint": "^5.16.0",
+        "extract-loader": "^3.1.0",
+        "html-webpack-plugin": "^3.2.0",
+        "mustache": "^3.0.1",
+        "node-sass": "^4.12.0",
+        "npm-check": "^5.9.0",
+        "sass-loader": "^7.1.0",
+        "style-loader": "^0.23.1",
+        "webpack": "^4.31.0",
+        "webpack-bundle-analyzer": "^3.3.2",
+        "webpack-cli": "^3.3.2"
+    }
+}
