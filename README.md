@@ -47,10 +47,10 @@ Lightmon provides exactly that:
 
 ## Usage
 
-(1) install dependencies: `npm ci`
-(2a) run an evaluation to evaluate a standard url set: `npm run evaluate`
-(2b) run the webserver to view the results: `npm run server` open [http://localhost:3000](http://localhost:3000)
-(3) run cleanup: `npm run cleanup`
+1. install dependencies: `npm ci`
+2. run an evaluation to evaluate a standard url set: `npm run evaluate`
+3. run the webserver to view the results: `npm run server` open [http://localhost:3000](http://localhost:3000)
+4. run cleanup: `npm run cleanup`
 
 
 
