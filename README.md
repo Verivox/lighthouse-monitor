@@ -1,4 +1,6 @@
-# Lightmon
+# Lighthouse Monitor
+![License](https://img.shields.io/github/license/verivox/lighthouse-monitor.svg?style=flat-square)
+![Snyk Vulnerabilities for GitHub Repo](https://img.shields.io/snyk/vulnerabilities/github/verivox/lighthouse-monitor.svg?style=flat-square)
 
 A lighthouse server, reporter and comparator to monitor multiple sites
 
