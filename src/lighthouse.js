@@ -28,25 +28,24 @@ class Lighthouse {
         let tries = 0
         let chrome
 
-        try {
-            tries++
-            chrome = await this.startChrome(options.chromeFlags)
+        do {
+            try {
+                tries++
+                chrome = await this.startChrome(options.chromeFlags)
 
-            if (!chrome) {
-                throw new Error(`Could not start Chrome`)
-            }
-            options.port = chrome.port
+                if (!chrome) {
+                    throw new Error(`Could not start Chrome`)
+                }
+                options.port = chrome.port
 
-            return await lighthouse(options.url, options)
-        } catch (e) {
-            debug("LIGHTMON:WARN")(`++ Error evaluating, try #${tries}/${maxRetries}: ${e}`)
-            if (tries > maxRetries) {
-                debug("LIGHTMON:ERROR")(`++ Reaches max-retries of ${maxRetries}, giving up`)
-                throw e
+                const result = await lighthouse(options.url, options)
+                return result
+            } catch (e) {
+                debug("LIGHTMON:WARN")(`++ Error evaluating, try #${tries}/${maxRetries}: ${e}`)
+            } finally {
+                await chrome.kill()
             }
-        } finally {
-            await chrome.kill()
-        }
+        } while (tries < maxRetries)
     }
 
     async result() {
