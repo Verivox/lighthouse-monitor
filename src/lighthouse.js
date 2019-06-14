@@ -1,3 +1,5 @@
+const debug = require("debug")
+
 /**
  * Part of Lightmon: https://github.com/verivox/lightmon
  * Licensed under MIT from the Verivox GmbH
@@ -37,9 +39,9 @@ class Lighthouse {
 
             return await lighthouse(options.url, options)
         } catch (e) {
-            debug.warn(`Error evaluating, try #${tries}/${maxRetries}: ${e}`)
+            debug("LIGHTMON:WARN")(`++ Error evaluating, try #${tries}/${maxRetries}: ${e}`)
             if (tries > maxRetries) {
-                debug.error(`Reaches max-retries of ${maxRetries}, giving up`)
+                debug("LIGHTMON:ERROR")(`++ Reaches max-retries of ${maxRetries}, giving up`)
                 throw e
             }
         } finally {
