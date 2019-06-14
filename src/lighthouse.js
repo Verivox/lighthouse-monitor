@@ -18,22 +18,30 @@ class Lighthouse {
     }
 
     async startChrome(chromeFlags) {
-        try {
-            return await chromeLauncher.launch({ chromeFlags })
-        } catch (e) {}  // eslint-disable-line no-empty
+        return await chromeLauncher.launch({ chromeFlags })
     }
 
-    async _evaluate(options) {
+    // this function evaluates a page and retries for x times
+    async _evaluate(options, maxRetries=3) {
         let tries = 0
         let chrome
-        do {
+
+        try {
             tries++
             chrome = await this.startChrome(options.chromeFlags)
-        } while (!chrome && tries < 3)
-        options.port = chrome.port
-        try {
-            const result = await lighthouse(options.url, options)
-            return result
+
+            if (!chrome) {
+                throw new Error(`Could not start Chrome`)
+            }
+            options.port = chrome.port
+
+            return await lighthouse(options.url, options)
+        } catch (e) {
+            debug.warn(`Error evaluating, try #${tries}/${maxRetries}: ${e}`)
+            if (tries > maxRetries) {
+                debug.error(`Reaches max-retries of ${maxRetries}, giving up`)
+                throw e
+            }
         } finally {
             await chrome.kill()
         }
