@@ -1,4 +1,4 @@
-const debug = require("debug")
+const debug = require('debug')
 
 /**
  * Part of Lightmon: https://github.com/verivox/lightmon
@@ -34,14 +34,14 @@ class Lighthouse {
                 chrome = await this.startChrome(options.chromeFlags)
 
                 if (!chrome) {
-                    throw new Error(`Could not start Chrome`)
+                    throw new Error('Could not start Chrome')
                 }
                 options.port = chrome.port
 
                 const result = await lighthouse(options.url, options)
                 return result
             } catch (e) {
-                debug("LIGHTMON:WARN")(`++ Error evaluating, try #${tries}/${maxRetries}: ${e}`)
+                debug('LIGHTMON:WARN')(`++ Error evaluating, try #${tries}/${maxRetries}: ${e}`)
             } finally {
                 await chrome.kill()
             }
