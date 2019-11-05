@@ -145,10 +145,10 @@ receivers.push(
 )
 
 const newRelicOptions = {
-    accountKey: process.env.NEW_RELIC_ACCOUNT_ID,
+    accountId: process.env.NEW_RELIC_ACCOUNT_ID,
     apiKey: process.env.NEW_RELIC_API_KEY
 }
-if (newRelicOptions.accountKey || newRelicOptions.apiKey) {
+if (newRelicOptions.accountId || newRelicOptions.apiKey) {
     receivers.push(
         new NewRelic(newRelicOptions)
     )
