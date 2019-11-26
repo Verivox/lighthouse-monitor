@@ -23,8 +23,11 @@ describe('Reports', function () {
     })
 
 
-    this.afterEach(function () {
-        try {
+    this.afterEach(async () => {
+      if (this.reports) {
+        await this.reports.destroy()
+      }
+      try {
             fs.removeSync(this._baseDir)
         } catch (e) {}  // eslint-disable-line no-empty
     })

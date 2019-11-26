@@ -87,6 +87,13 @@ class Reports {
     get baseDir() {
         return this._baseDir
     }
+
+    async destroy() {
+      if (this._watcher) {
+        await this._watcher.close()
+        delete this._watcher
+      }
+    }
 }
 
 

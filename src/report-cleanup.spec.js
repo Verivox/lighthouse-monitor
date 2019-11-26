@@ -9,6 +9,7 @@ const Moment = require('moment')
 const fs = require('fs-extra')
 const join = require('path').join
 const tmpdir = require('os').tmpdir
+const chokidar = require('chokidar')
 
 const { Reports } = require('./reports')
 const { ReportCleanup } = require('./report-cleanup')
@@ -48,6 +49,9 @@ describe('ReportCleanup', function () {
     })
 
     this.afterEach(() => {
+        if (this.reports) {
+            this.reports.destroy()
+        }
         try {
             fs.removeSync(this._baseDir)
         } catch (e) {}  // eslint-disable-line no-empty
@@ -122,7 +126,7 @@ describe('ReportCleanup', function () {
     })
 
     it('removes empty directories in the reportDir', async () => {
-        const reports = await Reports.setup(this._baseDir)
+        this.reports = await Reports.setup(this._baseDir)
         fs.unlinkSync(join(this._baseDir, dirWithoutContent, '.gitkeep'))
         const sut = new ReportCleanup({reports, dryRun: false})
         expect(this._baseDir).be.a.directory().and.include.subDirs([dirWithoutContent])
