@@ -50,7 +50,7 @@ describe('Report', function () {
             url: 'https://kumbier.it',
             name: 'KITS',
             preset: 'mobile-fast',
-            reportsDir: '/some/path',
+            reportsDir: dirFixture,
             runStartedAt: '2018-07-15T23:12:05.023Z'
         }
         const conf = {
@@ -58,7 +58,7 @@ describe('Report', function () {
             name: 'KITS',
             preset: 'mobile-fast',
             date: '2018-07-15T23:12:05.023Z',
-            path: '/some/path/2018-07-15T23_12_05.023Z'
+            path: join(dirFixture, '2018-07-15T23_12_05.023Z')
         }
         const actual = Report.fromMeta(meta)
         const expected = new Report(conf)

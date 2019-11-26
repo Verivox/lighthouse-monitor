@@ -34,7 +34,13 @@ describe('TimestampedDirectory', function() {
     it('does not contain invalid windows filesystem characters', async () => {
         const dir = new TimestampedDirectory(this._baseDir)
         const config = {url: 'https://kumbier.it', runStartedAt: new Date().toISOString()}
-        const reportFile = await dir._target(this._baseDir, 'report.json.gz', config)
+        let reportFile = await dir._target(this._baseDir, 'report.json.gz', config)
+
+        // through away drive letter for windows as it contains colon
+        if (process.platform === 'win32') {
+            reportFile = reportFile.substr(reportFile.indexOf('\\'));
+        }
+
         expect(reportFile).not.to.match(/[><:|?*]/)
     })
 
