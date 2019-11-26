@@ -89,23 +89,23 @@ class ReportCleanup {
         const subDirs = await fs.readdir(reportDir)
 
         for (const entry of subDirs) {
-          const subdir = path.join(reportDir, entry)
-          if (!fs.statSync(subdir).isDirectory()) {
-              return
-          }
+            const subdir = path.join(reportDir, entry)
+            if (!fs.statSync(subdir).isDirectory()) {
+                return
+            }
 
-          if (fs.readdirSync(subdir).length > 0) {
-              return
-          }
+            if (fs.readdirSync(subdir).length > 0) {
+                return
+            }
 
-          try {
-              debug(`Deleting empty directory ${subdir}`)
-              if (!this.dryRun) {
-                await fs.rmdir(subdir)
-              }
-          } catch (e) {
-              warn(`Could not delete empty directory ${subdir} - error: ${e}`)
-          }
+            try {
+                debug(`Deleting empty directory ${subdir}`)
+                if (!this.dryRun) {
+                    await fs.rmdir(subdir)
+                }
+            } catch (e) {
+                warn(`Could not delete empty directory ${subdir} - error: ${e}`)
+            }
         }
     }
 }

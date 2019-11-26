@@ -38,7 +38,7 @@ describe('TimestampedDirectory', function() {
 
         // through away drive letter for windows as it contains colon
         if (process.platform === 'win32') {
-          reportFile = reportFile.substr(reportFile.indexOf('\\'));
+            reportFile = reportFile.substr(reportFile.indexOf('\\'));
         }
 
         expect(reportFile).not.to.match(/[><:|?*]/)

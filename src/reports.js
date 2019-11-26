@@ -26,7 +26,7 @@ class Reports {
     }
 
     _setupWatcher(dir = this._baseDir) {
-        return new Promise(async (resolve, reject) => {
+        return new Promise((resolve, reject) => {
             const watchOptions = {
                 ignoreInitial: false,
                 persistent: false
@@ -89,10 +89,10 @@ class Reports {
     }
 
     async destroy() {
-      if (this._watcher) {
-        await this._watcher.close()
-        delete this._watcher
-      }
+        if (this._watcher) {
+            await this._watcher.close()
+            delete this._watcher
+        }
     }
 }
 

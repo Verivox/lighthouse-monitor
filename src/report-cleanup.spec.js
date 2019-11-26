@@ -9,7 +9,6 @@ const Moment = require('moment')
 const fs = require('fs-extra')
 const join = require('path').join
 const tmpdir = require('os').tmpdir
-const chokidar = require('chokidar')
 
 const { Reports } = require('./reports')
 const { ReportCleanup } = require('./report-cleanup')

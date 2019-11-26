@@ -36,6 +36,8 @@ class Lighthouse {
                 if (!chrome) {
                     throw new Error('Could not start Chrome')
                 }
+
+                // eslint-disable-next-line require-atomic-updates
                 options.port = chrome.port
 
                 const result = await lighthouse(options.url, options)
