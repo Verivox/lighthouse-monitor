@@ -128,10 +128,19 @@ describe('ReportCleanup', function () {
     it('removes empty directories in the reportDir', async () => {
         this.reports = await Reports.setup(this._baseDir)
         fs.unlinkSync(join(this._baseDir, dirWithoutContent, '.gitkeep'))
-        const sut = new ReportCleanup({reports, dryRun: false})
+        const sut = new ReportCleanup({reports: this.reports, dryRun: false})
         expect(this._baseDir).be.a.directory().and.include.subDirs([dirWithoutContent])
         expect(this._baseDir).be.a.directory().and.include.subDirs([dirWithContent])
         await sut.purgeEmptyDirs()
+
+        /*
+          ok, so: for whatever stupid reason windows does not sync the filesystem operations
+          fast enough, so that this test will fail, if we omit this line. We are unable to
+          force synchronization, because node does not expose that for directories, but only
+          for files. This is a workaround and we are not proud of it. but it works. FIXME.
+          plz.
+        */
+        await fs.readdir(this._baseDir)
         expect(this._baseDir).be.a.directory().and.not.include.subDirs([dirWithoutContent])
         expect(this._baseDir).be.a.directory().and.include.subDirs([dirWithContent])
     })
