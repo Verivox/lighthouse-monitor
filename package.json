@@ -8,7 +8,7 @@
         "cleanup": "cross-env DEBUG=${DEBUG:-LIGHTMON*} ./bin/cleanup",
         "lint": "eslint src/",
         "lint:fix": "eslint --fix src/",
-        "start": "./bin/evaluate",
+        "start": "node ./bin/evaluate",
         "evaluation": "cross-env DEBUG=${DEBUG:-LIGHTMON*} npm start",
         "frontend:preflight": "cd frontend && npm run preflight",
         "frontend:preflight:fix": "cd frontend && npm run preflight:fix",
