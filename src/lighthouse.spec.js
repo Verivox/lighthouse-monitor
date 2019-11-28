@@ -22,12 +22,23 @@ describe('Lighthouse', function() {
         const config = Object.assign({}, DefaultOptions, {url: 'https://kumbier.it'})
         const lighthouse = new Lighthouse(config)
         sinon.stub(lighthouse, 'result').returns(new Promise((resolve) => resolve(report)))
-		
+
         await lighthouse.reportTo([receiver1, receiver2])
 
         expect(spy1.called).to.equal(true)
         expect(spy2.called).to.equal(true)
         expect(spy1).to.have.been.calledWith(report, config)
         expect(spy2).to.have.been.calledWith(report, config)
+    })
+
+    it('calls a defined prehook before evaluating', async () => {
+        const setup = sinon.spy();
+        const prehook = { setup };
+        const evaluation = sinon.spy()
+        const sut = new Lighthouse({}, evaluation)
+
+        await sut._evaluate({prehook: prehook})
+
+        expect(setup).to.have.been.calledBefore(evaluation)
     })
 })

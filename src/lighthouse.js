@@ -4,23 +4,23 @@ const debug = require('debug')
  * Part of Lightmon: https://github.com/verivox/lightmon
  * Licensed under MIT from the Verivox GmbH
  */
-const lighthouse = require('lighthouse')
-const chromeLauncher = require('chrome-launcher')
+const lighthouseLib = require('lighthouse')
+const puppeteer = require('puppeteer');
 
 const DefaultOptions = {
-    chromeFlags: [
-        '--headless',
-        '--no-sandbox'
-    ]
+    browserOptions: {
+        args: ['--remote-debugging-port=0']
+    }
 }
 
 class Lighthouse {
-    constructor(options = DefaultOptions) {
+    constructor(options = DefaultOptions, _lighthouse = lighthouseLib) {
         this._options = options
+        this._lighthouse = _lighthouse
     }
 
-    async startChrome(chromeFlags) {
-        return await chromeLauncher.launch({ chromeFlags })
+    async startChrome(options) {
+        return await puppeteer.launch(options);
     }
 
     // this function evaluates a page and retries for x times
@@ -31,23 +31,31 @@ class Lighthouse {
         do {
             try {
                 tries++
-                chrome = await this.startChrome(options.chromeFlags)
+                chrome = await this.startChrome(options.browserOptions)
 
                 if (!chrome) {
                     throw new Error('Could not start Chrome')
                 }
 
                 // eslint-disable-next-line require-atomic-updates
-                options.port = chrome.port
+                options.port = this.getDebugPort(chrome.wsEndpoint());
+                if (options.prehook) {
+                    await options.prehook.setup(chrome);
+                }
 
-                const result = await lighthouse(options.url, options)
+                const result = await this._lighthouse(options.url, options)
                 return result
             } catch (e) {
                 debug('LIGHTMON:WARN')(`++ Error evaluating, try #${tries}/${maxRetries}: ${e}`)
             } finally {
-                await chrome.kill()
+                await chrome.close()
             }
         } while (tries < maxRetries)
+    }
+
+    getDebugPort(url) {
+        const s1 = url.substr(url.lastIndexOf(':') + 1);
+        return s1.substr(0, s1.indexOf('/'));
     }
 
     async result() {

@@ -38,7 +38,7 @@ program
     .option('-f, --force', 'ignore lockfile')
     .option('-p, --preset <preset>', `run only preset (${Object.values(config.presets).map(p => p.preset).join('|')})`)
     .option('-c, --config <file>', 'use this config file instead of config/default.js')
-    .option('-v, --verbose', 'show debugging information')
+    .option('-v, --verbose', 'show verbose information')
     .parse(process.argv)
 
 
