@@ -23,8 +23,17 @@ class Lighthouse {
         return await puppeteer.launch(options);
     }
 
+    _checkForDeprecatedOptions(options) {
+        if (typeof options.chromeFlags !== 'undefined') {
+            debug('LIGHTMON:WARN')(`You are using a deprecated config option (chromeFlags) - it is ignored from ` +
+                `version 2.0.0. Please check the CHANGELOG.md on the migration process.`)
+        }
+    }
+
     // this function evaluates a page and retries for x times
     async _evaluate(options, maxRetries=3) {
+        this._checkForDeprecatedOptions(options)
+
         let tries = 0
         let chrome
 
@@ -43,10 +52,9 @@ class Lighthouse {
                     await options.prehook.setup(chrome);
                 }
 
-                const result = await this._lighthouse(options.url, options)
-                return result
+                return await this._lighthouse(options.url, options)
             } catch (e) {
-                debug('LIGHTMON:WARN')(`++ Error evaluating, try #${tries}/${maxRetries}: ${e}`)
+                debug('LIGHTMON:WARN')(`++ Error evaluating, retry #${tries}/${maxRetries}: ${e}`)
             } finally {
                 await chrome.close()
             }
@@ -67,9 +75,9 @@ class Lighthouse {
 
     async reportTo(receivers) {
         const result = await this.result()
-        receivers.forEach(async (receiver) => {
+        for (const receiver of receivers) {
             await receiver.receive(result, this._options)
-        })
+        }
     }
 }
 

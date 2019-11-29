@@ -1,6 +1,6 @@
 {
     "name": "lightmon",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "description": "A lighthouse monitor",
     "main": "./bin/lightmon",
     "scripts": {
@@ -34,14 +34,14 @@
     "keywords": [
         "lighthouse",
         "monitor",
-        "new relic",
         "prometheus",
         "metrics",
         "performance"
     ],
     "author": "Lars Kumbier <lars@kumbier.it> (https://kumbier.it)",
     "contributors": [
-        "Kim Almasan <kim@kumbier.it> (https://kumbier.it)"
+        "Kim Almasan <kim@kumbier.it> (https://kumbier.it)",
+        "Yurii Ivanov <yurii.ivanov@verivox.com>"
     ],
     "license": "MIT",
     "dependencies": {
