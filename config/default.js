@@ -40,9 +40,12 @@ try {
  * These are the default settings, allowing lighthouse to run in docker
  */
 const presetDefault = {
-    chromeFlags: [
-        '--no-sandbox',
-    ],
+    browserOptions: {
+        headless: true,
+        args: [
+            '--no-sandbox'
+        ]
+    },
     onlyCategories: [
         'performance'
     ],
@@ -51,8 +54,8 @@ const presetDefault = {
     ]
 }
 
-if (!process.env.NO_HEADLESS) {
-    presetDefault.chromeFlags.push('--headless')
+if (process.env.NO_HEADLESS) {
+    presetDefault.browserOptions.headless = false
 }
 
 
@@ -189,7 +192,7 @@ const config = Object.assign(
     localConfig
 )
 
-// TODO: this is getting ridiculous
+// TODO: this is getting ridiculous - create a real config class
 config.reportDir = reportDir
 
 // el cheapo validity check

@@ -1,6 +1,6 @@
 {
     "name": "lightmon",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "description": "A lighthouse monitor",
     "main": "./bin/lightmon",
     "scripts": {
@@ -34,19 +34,18 @@
     "keywords": [
         "lighthouse",
         "monitor",
-        "new relic",
         "prometheus",
         "metrics",
         "performance"
     ],
     "author": "Lars Kumbier <lars@kumbier.it> (https://kumbier.it)",
     "contributors": [
-        "Kim Almasan <kim@kumbier.it> (https://kumbier.it)"
+        "Kim Almasan <kim@kumbier.it> (https://kumbier.it)",
+        "Yurii Ivanov <yurii.ivanov@verivox.com>"
     ],
     "license": "MIT",
     "dependencies": {
         "chokidar": "^3.3.0",
-        "chrome-launcher": "^0.12.0",
         "commander": "^4.0.1",
         "cross-env": "^6.0.3",
         "debug": "^4.1.1",
@@ -57,6 +56,7 @@
         "moment": "^2.24.0",
         "prom-client": "^11.5.3",
         "proper-lockfile": "^4.1.1",
+        "puppeteer": "^2.0.0",
         "request": "^2.88.0",
         "request-promise-native": "^1.0.8"
     },
@@ -65,8 +65,8 @@
         "chai-files": "^1.4.0",
         "chai-fs": "^2.0.0",
         "concurrently": "^5.0.0",
-        "eslint": "^6.6.0",
-        "eslint-plugin-mocha": "^6.2.1",
+        "eslint": "^6.7.1",
+        "eslint-plugin-mocha": "^6.2.2",
         "eslint-plugin-node": "^10.0.0",
         "mocha": "^6.2.2",
         "nodemon": "^1.19.4",
