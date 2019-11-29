@@ -25,8 +25,8 @@ class Lighthouse {
 
     _checkForDeprecatedOptions(options) {
         if (typeof options.chromeFlags !== 'undefined') {
-            debug('LIGHTMON:WARN')(`You are using a deprecated config option (chromeFlags) - it is ignored from ` +
-                `version 2.0.0. Please check the CHANGELOG.md on the migration process.`)
+            debug('LIGHTMON:WARN')('You are using a deprecated config option (chromeFlags) - it is ignored from ' +
+                'version 2.0.0. Please check the CHANGELOG.md on the migration process.')
         }
     }
 
