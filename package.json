@@ -1,6 +1,6 @@
 {
     "name": "lightmon",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "description": "A lighthouse monitor",
     "main": "./bin/lightmon",
     "scripts": {
@@ -69,7 +69,7 @@
         "eslint-plugin-mocha": "^6.2.2",
         "eslint-plugin-node": "^10.0.0",
         "mocha": "^6.2.2",
-        "nodemon": "^1.19.4",
+        "nodemon": "^2.0.1",
         "npm-check": "^5.9.0",
         "rimraf": "^3.0.0",
         "sinon": "^7.5.0",
