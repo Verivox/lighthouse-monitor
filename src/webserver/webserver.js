@@ -2,8 +2,7 @@
  * Part of Lightmon: https://github.com/verivox/lightmon
  * Licensed under MIT from the Verivox GmbH
  */
-const debug = require('debug')
-const info = debug('LIGHTMON:INFO')
+const winston = require('winston')
 const express = require('express')
 
 
@@ -33,11 +32,11 @@ class Webserver {
     }
 
     _onStartup() {
-        info(`Listening on Port: ${this._port}`)
+        winston.info(`Listening on Port: ${this._port}`)
     }
 
     run() {
-        info('Starting Webserver')
+        winston.info('Starting Webserver')
         this.start()
     }
 }

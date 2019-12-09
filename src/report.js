@@ -3,7 +3,7 @@
  * Licensed under MIT from the Verivox GmbH
  */
 const crypto = require('crypto')
-const debug = require('debug')
+const winston = require('winston')
 const { readFileSync, existsSync, unlinkSync } = require('fs-extra')
 const path = require('path')
 const zlib = require('zlib')
@@ -98,7 +98,7 @@ class Report {
                 try {
                     unlinkSync(file)
                 } catch (e) {
-                    debug('LIGHTMON:WARN')(`Could not delete file - error on ${file} was ${e}`)
+                    winston.warn(`Could not delete file - error on ${file} was ${e}`)
                 }
             })
     }

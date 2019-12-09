@@ -17,19 +17,42 @@
  */
 const os = require('os')
 const path = require('path')
+const winston = require('winston')
+require('winston-daily-rotate-file')
 
 const { TimestampedDirectory } = require('../src/receivers/timestamped-directory')
 const { FilePrometheus } = require('../src/receivers/file-prometheus')
 const { NewRelic } = require('../src/receivers/new-relic')
 
-const debug = require('debug')
+
+/**
+ * Logging configuration
+ *
+ * This has to come before loading the local configuration, so that you have a chance to overwrite it.
+ */
+winston.configure({
+    transports: [
+        new winston.transports.Console()
+    ]
+})
+
+if (process.env.LOGDIR) {
+    winston.add(new (winston.transports.DailyRotateFile)({
+        dirname: process.env.LOGIDR,
+        filename: '%DATE%.log',
+        datePattern: 'YYYY-MM-DD',
+        zippedArchive: false,
+        maxFiles: '30d'
+    }))
+}
+
 
 let localConfig = {}
 try {
     localConfig = require('./local')
 } catch (e) {
     if (e.code !== 'MODULE_NOT_FOUND') {
-        debug('LIGHTMON:ERROR')('config/local.js found, but threw exception while importing: ', e.toString())
+        winston.error('config/local.js found, but threw exception while importing: ', e.toString())
         process.exit(1)
     }
 }
@@ -199,7 +222,7 @@ config.reportDir = reportDir
 if (!presets || Object.keys(presets).length === 0 ||
     !receivers || receivers.length === 0 ||
     !targets || targets.length === 0) {
-    debug('LIGHTMON:ERROR')('Invalid config. I require at least one preset, one receiver and one target')
+    winston.error('Invalid config. I require at least one preset, one receiver and one target')
     process.exit(1)
 }
 

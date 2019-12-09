@@ -2,7 +2,7 @@
  * Part of Lightmon: https://github.com/verivox/lightmon
  * Licensed under MIT from the Verivox GmbH
  */
-const debug = require('debug')
+const winston = require('winston')
 const request = require('request-promise-native')
 const { LighthouseReport } = require('../lighthouse')
 
@@ -27,7 +27,7 @@ class NewRelic {
         try {
             await request(requestOptions)
         } catch(e) {
-            debug('LIGHTMON:WARN')('Could not send report to NewRelic - error was:', e.toString())
+            winston.warn('Could not send report to NewRelic - error was:', e.toString())
         }
     }
 

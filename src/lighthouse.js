@@ -1,4 +1,4 @@
-const debug = require('debug')
+const winston = require('winston')
 
 /**
  * Part of Lightmon: https://github.com/verivox/lightmon
@@ -25,7 +25,7 @@ class Lighthouse {
 
     _checkForDeprecatedOptions(options) {
         if (typeof options.chromeFlags !== 'undefined') {
-            debug('LIGHTMON:WARN')('You are using a deprecated config option (chromeFlags) - it is ignored from ' +
+            winston.warn('You are using a deprecated config option (chromeFlags) - it is ignored from ' +
                 'version 2.0.0. Please check the CHANGELOG.md on the migration process.')
         }
     }
@@ -54,7 +54,7 @@ class Lighthouse {
 
                 return await this._lighthouse(options.url, options)
             } catch (e) {
-                debug('LIGHTMON:WARN')(`++ Error evaluating, retry #${tries}/${maxRetries}: ${e}`)
+                winston.warn(`++ Error evaluating, retry #${tries}/${maxRetries}: ${e}`)
             } finally {
                 await chrome.close()
             }

@@ -1,4 +1,4 @@
-const debug = require('debug')
+const winston = require('winston')
 const { Prometheus } = require('./prometheus')
 
 const prom = require('prom-client')
@@ -21,7 +21,7 @@ class PushPrometheus extends Prometheus {
 
         this.pushgw.pushAdd({jobName: 'lightmon'}, (err) => {
             if (err) {
-                debug('LIGHTMON:PUSHGW:WARN')(err)
+                winston.warn(err)
             }
         })
     }

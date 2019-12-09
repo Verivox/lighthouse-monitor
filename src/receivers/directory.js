@@ -6,13 +6,14 @@ const zlib = require('zlib')
 const fs = require('fs-extra')
 const path = require('path')
 const os = require('os')
-const debug = require('debug')
+const winston = require('winston')
+
 
 class Directory {
     constructor(directory) {
         if (!directory) {
             directory = os.tmpdir()
-            debug(`Reports will be saved to ${directory}`)
+            winston.info(`Reports will be saved to ${directory}`)
         }
         this._directory = directory
     }
