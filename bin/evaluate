@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 let config = require('../config/default')
-const debug = require('debug')
+const winston = require('winston')
 const fs = require('fs-extra')
 const program = require('commander')
 const { evaluate } = require('../src/evaluate')
@@ -43,7 +43,7 @@ program
 
 
 if (program.verbose) {
-    debug.enable('LIGHTMON:*')
+    winston.setLevel('debug')
 }
 
 if (program.config) {
@@ -58,7 +58,7 @@ if (!validatePreset(program.preset, config)) {
 
 if (program.preset) {
     config.presets = Object.values(config.presets).filter(p => p.preset === program.preset)
-    debug('LIGHTMON:INFO')(`Restricting run to profile ${program.preset}`)
+    winston.info(`Restricting run to profile ${program.preset}`)
 }
 
 run(config).catch(console.error)

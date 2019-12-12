@@ -31,18 +31,29 @@ const { NewRelic } = require('../src/receivers/new-relic')
  * This has to come before loading the local configuration, so that you have a chance to overwrite it.
  */
 winston.configure({
+    level: 'info',
+    format: winston.format.combine(
+        winston.format.timestamp()
+    ),
     transports: [
-        new winston.transports.Console()
+        new winston.transports.Console({
+            format: winston.format.combine(
+                winston.format.printf(msg => `${msg.timestamp} ${msg.level.toUpperCase().padEnd(8)} ${msg.message}`)
+            )
+        })
     ]
 })
 
-if (process.env.LOGDIR) {
-    winston.add(new (winston.transports.DailyRotateFile)({
-        dirname: process.env.LOGIDR,
+if (process.env.LOG_DIR) {
+    winston.add(new winston.transports.DailyRotateFile({
+        dirname: process.env.LOG_DIR,
         filename: '%DATE%.log',
         datePattern: 'YYYY-MM-DD',
         zippedArchive: false,
-        maxFiles: '30d'
+        maxFiles: '30d',
+        format: winston.format.combine(
+            winston.format.json()
+        )
     }))
 }
 

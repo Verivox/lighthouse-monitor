@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 const config = require('../config/default')
-const debug = require('debug')
+const winston = require('winston')
 const fs = require('fs')
 const program = require('commander')
 const { Reports } = require('../src/reports')
@@ -10,14 +10,14 @@ const packageJson = require('../package.json')
 
 // bootstraps programs and runs submodules
 async function run(options) {
-    debug('LIGHTMON:CLEANUP:DEBUG')('Setting up reports handler...')
+    winston.debug('Setting up reports handler...')
     options.reports = await Reports.setup(options.reportDir)
     const cleanup = new ReportCleanup(options)
 
-    debug('LIGHTMON:CLEANUP:INFO')('Starting cleanup of reports')
+    winston.info('Starting cleanup of reports')
     await cleanup.clean()
 
-    debug('LIGHTMON:CLEANUP:INFO')('Starting deletion of empty directories')
+    winston.info('Starting deletion of empty directories')
     await cleanup.purgeEmptyDirs()
 }
 
@@ -50,7 +50,7 @@ if (program.retainWeekly && program.retainDaily && program.retainDaily >= progra
 }
 
 if (program.verbose) {
-    debug.enable('LIGHTMON:*')
+    winston.setLevel('debug')
 }
 
 const reportDir = program.reportDir || config.reportDir
@@ -63,7 +63,7 @@ if (!fs.existsSync(reportDir) || !fs.statSync(reportDir).isDirectory()) {
 
 run(
     {
-        dryRun: program.dryRun !== undefined ? true : false,
+        dryRun: program.dryRun !== undefined,
         reportDir,
         retainDaily: program.retainDaily,
         retainWeekly: program.retainWeekly

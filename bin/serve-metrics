@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+const winston = require('winston')
 const { Webserver, Metrics } = require('../src/webserver')
 const { WebserverOptions, prometheusMetricsFile } = require('../config/default')
 
@@ -10,4 +11,4 @@ async function run() {
 }
 
 
-run().catch(console.error)
+run().catch(winston.error)
