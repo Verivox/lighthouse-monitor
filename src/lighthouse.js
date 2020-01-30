@@ -149,9 +149,20 @@ class LighthouseReport {
         }
     }
 
-    // eslint-disable-next-line no-unused-vars
     add(key, value) {
-        throw new Error('Please inherit this class, and override this method')
+        this._metrics.set(key, value)
+    }
+
+    metrics() {
+        let obj = {}
+        for (let [k,v] of this._metrics) {
+            obj[k] = v
+        }
+        return obj
+    }
+
+    meta() {
+        return this._meta
     }
 }
 
