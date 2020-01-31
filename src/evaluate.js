@@ -24,7 +24,7 @@ async function evaluate(config) {
     }
 
     for (const receiver of config.receivers) {
-        if (typeof receiver.afterEvaluation === "function") {
+        if (typeof receiver.afterEvaluation === 'function') {
             await receiver.afterEvaluation()
         }
     }

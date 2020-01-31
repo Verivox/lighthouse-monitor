@@ -32,12 +32,14 @@ describe('FilePrometheus', function() {
     it('adds new metrics over time', async () => {
         const p = new FilePrometheus(this._target)
         await p.receive(reportFixture, {url: 'https://kumbier.it'})
+        await p.afterEvaluation()
 
         expect(this._target).to.be.a.file()
         expect(this._target).with.contents.that.match(/url="https:\/\/kumbier.it"/)
         expect(this._target).not.with.contents.that.match(/url="https:\/\/example.com"/)
 
         await p.receive(reportFixture, {url: 'https://example.com'})
+        await p.afterEvaluation()
         expect(this._target).with.contents.that.match(/url="https:\/\/kumbier.it"/)
         expect(this._target).with.contents.that.match(/url="https:\/\/example.com"/)
     })

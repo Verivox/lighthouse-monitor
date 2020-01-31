@@ -3,7 +3,7 @@
  * Licensed under MIT from the Verivox GmbH
  */
 const fs = require('fs-extra')
-const { LighthouseReport } = require("../lighthouse")
+const { LighthouseReport } = require('../lighthouse')
 
 
 class JsonMetricsReceiver {
