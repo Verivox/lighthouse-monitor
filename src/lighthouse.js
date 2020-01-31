@@ -122,8 +122,8 @@ class LighthouseReport {
         this.add('performance.byte-weight.total.score', lhr.audits['total-byte-weight'].score)
         this.add('performance.byte-weight.total.value', lhr.audits['total-byte-weight'].numericValue)
 
-        this.add('performance.longest-request-chain.duration', !lhr.audits['critical-request-chains'].error ? lhr.audits['critical-request-chains'].details.longestChain.duration : null)
-        this.add('performance.longest-request-chain.length', !lhr.audits['critical-request-chains'].error ? lhr.audits['critical-request-chains'].details.longestChain.length : null)
+        this.add('performance.longest-request-chain.duration', lhr.audits['critical-request-chains'].details ? lhr.audits['critical-request-chains'].details.longestChain.duration : null)
+        this.add('performance.longest-request-chain.length', lhr.audits['critical-request-chains'].details ? lhr.audits['critical-request-chains'].details.longestChain.length : null)
         this.add('performance.mainthread-work-breakdown', lhr.audits['mainthread-work-breakdown'].numericValue)
         this.add('performance.bootup-time', lhr.audits['bootup-time'].numericValue)
 
@@ -136,22 +136,35 @@ class LighthouseReport {
 
         let totalBytes = []
 
-        lhr.audits['network-requests'].details.items.forEach(resource => {
-            const type = resource.resourceType // e.g. script, image, document, ...
-            if (!totalBytes[type])
-                totalBytes[type] = 0
+        if (lhr.audits['network-requests'].details) {
+            lhr.audits['network-requests'].details.items.forEach(resource => {
+                const type = resource.resourceType // e.g. script, image, document, ...
+                if (!totalBytes[type])
+                    totalBytes[type] = 0
 
-            totalBytes[type] = totalBytes[type] + resource.transferSize
-        })
+                totalBytes[type] = totalBytes[type] + resource.transferSize
+            })
+        }
 
         for (let key in totalBytes) {
             this.add('performance.byte-weight.' + key.toLowerCase(), totalBytes[key])
         }
     }
 
-    // eslint-disable-next-line no-unused-vars
     add(key, value) {
-        throw new Error('Please inherit this class, and override this method')
+        this._metrics.set(key, value)
+    }
+
+    metrics() {
+        let obj = {}
+        for (let [k,v] of this._metrics) {
+            obj[k] = v
+        }
+        return obj
+    }
+
+    meta() {
+        return this._meta
     }
 }
 

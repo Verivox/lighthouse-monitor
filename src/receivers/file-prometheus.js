@@ -21,7 +21,9 @@ class FilePrometheus extends Prometheus {
 
     async receive(report, config) {
         super.receive(report, config)
+    }
 
+    async afterEvaluation() {
         await fs.ensureFile(this.filename)
         await fs.writeFile(this.filename, prom.register.metrics())
     }

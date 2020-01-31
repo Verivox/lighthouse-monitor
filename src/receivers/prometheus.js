@@ -21,13 +21,9 @@ class PrometheusReport extends LighthouseReport {
     }
 
     save() {
-        for (const metric of this.metrics()) {
+        for (const metric of this._metrics.values()) {
             metric.save()
         }
-    }
-
-    metrics() {
-        return this._metrics.values()
     }
 }
 

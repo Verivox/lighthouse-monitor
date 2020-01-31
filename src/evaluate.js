@@ -22,6 +22,12 @@ async function evaluate(config) {
             await run(options, config.receivers)
         }
     }
+
+    for (const receiver of config.receivers) {
+        if (typeof receiver.afterEvaluation === "function") {
+            await receiver.afterEvaluation()
+        }
+    }
 }
 
 module.exports = {
