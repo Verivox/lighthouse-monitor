@@ -1,3 +1,9 @@
+# 2.1.0
+
+* Receivers can provide an `afterEvaluation()`-method, which will be called before shutting down
+* A new receiver `jsonMetrics` for a reduced set of json results is added.
+
+
 # 2.0.0
 
 * Switch to puppeteer as launcher

@@ -141,6 +141,7 @@ const receivers = []
 const reportDir = process.env.REPORT_DIR || localConfig.reportDir || path.join(os.tmpdir(), 'lightmon')
 
 const prometheusMetricsFile = path.join(WebserverOptions.publicFolder, 'metrics', 'index.html')
+const jsonMetricsFile = path.join(WebserverOptions.publicFolder, 'metrics.json')
 
 receivers.push(
     new TimestampedDirectory(reportDir),
@@ -186,6 +187,7 @@ const config = Object.assign(
         targets,
         WebserverOptions,
         prometheusMetricsFile,
+        jsonMetricsFile,
         lockFile,
         lockFileOptions
     },

@@ -6,7 +6,7 @@ const fs = require('fs-extra')
 const { LighthouseReport } = require('../lighthouse')
 
 
-class JsonMetricsReceiver {
+class JsonMetrics {
     constructor(target=`${__dirname}/../../public/metrics.json`) {
         this._target = target
         this._reports = []
@@ -32,4 +32,4 @@ class JsonMetricsReceiver {
     }
 }
 
-module.exports = { JsonMetricsReceiver }
+module.exports = { JsonMetricsReceiver: JsonMetrics }
