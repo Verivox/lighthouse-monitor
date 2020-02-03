@@ -32,4 +32,4 @@ class JsonMetrics {
     }
 }
 
-module.exports = { JsonMetricsReceiver: JsonMetrics }
+module.exports = { JsonMetrics }
