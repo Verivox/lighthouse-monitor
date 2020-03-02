@@ -1,6 +1,6 @@
 {
     "name": "lightmon",
-    "version": "2.1.1",
+    "version": "2.1.2",
     "description": "A lighthouse monitor",
     "main": "./bin/lightmon",
     "scripts": {
@@ -46,7 +46,7 @@
     "license": "MIT",
     "dependencies": {
         "chokidar": "^3.3.1",
-        "commander": "^4.1.0",
+        "commander": "^4.1.1",
         "cross-env": "^7.0.0",
         "debug": "^4.1.1",
         "express": "^4.17.1",
@@ -54,10 +54,10 @@
         "lighthouse": "^5.6.0",
         "mime": "^2.4.4",
         "moment": "^2.24.0",
-        "prom-client": "^11.5.3",
+        "prom-client": "^12.0.0",
         "proper-lockfile": "^4.1.1",
-        "puppeteer": "^2.1.0",
-        "request": "^2.88.0",
+        "puppeteer": "^2.1.1",
+        "request": "^2.88.2",
         "request-promise-native": "^1.0.8"
     },
     "devDependencies": {
@@ -66,13 +66,13 @@
         "chai-fs": "^2.0.0",
         "concurrently": "^5.1.0",
         "eslint": "^6.8.0",
-        "eslint-plugin-mocha": "^6.2.2",
+        "eslint-plugin-mocha": "^6.3.0",
         "eslint-plugin-node": "^11.0.0",
-        "mocha": "^7.0.1",
+        "mocha": "^7.1.0",
         "nodemon": "^2.0.2",
-        "npm-check": "^5.9.0",
-        "rimraf": "^3.0.1",
-        "sinon": "^8.1.1",
-        "sinon-chai": "^3.4.0"
+        "npm-check": "^5.9.2",
+        "rimraf": "^3.0.2",
+        "sinon": "^9.0.0",
+        "sinon-chai": "^3.5.0"
     }
 }
