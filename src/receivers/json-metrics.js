@@ -18,6 +18,7 @@ class JsonMetrics {
 
     async afterEvaluation() {
         const payload = {
+            timestamp: new Date().toISOString(),
             reports: this._reports.map(report => {
                 return {
                     url: report.meta().url,
