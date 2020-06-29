@@ -101,11 +101,20 @@ class LighthouseReport {
         this.add('performance.first-contentful-paint.score', lhr.audits['first-contentful-paint'].score)
         this.add('performance.first-contentful-paint.value', lhr.audits['first-contentful-paint'].numericValue)
 
+        this.add('performance.largest-contentful-paint.score', lhr.audits['largest-contentful-paint'].score)
+        this.add('performance.largest-contentful-paint.value', lhr.audits['largest-contentful-paint'].numericValue)
+
         this.add('performance.first-meaningful-paint.score', lhr.audits['first-meaningful-paint'].score)
         this.add('performance.first-meaningful-paint.value', lhr.audits['first-meaningful-paint'].numericValue)
 
         this.add('performance.speed-index.score', lhr.audits['speed-index'].score)
         this.add('performance.speed-index.value', lhr.audits['speed-index'].numericValue)
+
+        this.add('performance.total-blocking-time.score', lhr.audits['total-blocking-time'].score)
+        this.add('performance.total-blocking-time.value', lhr.audits['total-blocking-time'].numericValue)
+
+        this.add('performance.cumulative-layout-shift.score', lhr.audits['cumulative-layout-shift'].score)
+        this.add('performance.cumulative-layout-shift.value', lhr.audits['cumulative-layout-shift'].numericValue)
 
         this.add('performance.first-cpu-idle.score', lhr.audits['first-cpu-idle'].score)
         this.add('performance.first-cpu-idle.value', lhr.audits['first-cpu-idle'].numericValue)
@@ -115,9 +124,6 @@ class LighthouseReport {
 
         this.add('performance.estimated-input-latency.score', lhr.audits['estimated-input-latency'].score)
         this.add('performance.estimated-input-latency.value', lhr.audits['estimated-input-latency'].numericValue)
-
-        this.add('performance.time-to-first-byte.score', lhr.audits['time-to-first-byte'].score)
-        this.add('performance.time-to-first-byte.value', lhr.audits['time-to-first-byte'].numericValue)
 
         this.add('performance.byte-weight.total.score', lhr.audits['total-byte-weight'].score)
         this.add('performance.byte-weight.total.value', lhr.audits['total-byte-weight'].numericValue)

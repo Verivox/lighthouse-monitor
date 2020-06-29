@@ -5,7 +5,7 @@
 const expect = require('chai').expect
 
 const { NewRelic } = require('./new-relic')
-const reportFixture = require('../test-fixtures/report-v3.json')
+const reportFixture = require('../test-fixtures/report.json')
 
 const InvalidCredentialsOptions = {
     apiKey: 'asldkfhgaslkdjfhaskldfhaklsdjfh',

@@ -14,8 +14,7 @@ const tmpdir = require('os').tmpdir
 
 const { Directory } = require('./directory')
 
-const reportFixture = require('../test-fixtures/report-v3.json')
-const reportFixtureWithHtml = require('../test-fixtures/report-v3-with-html.json')
+const reportFixture = require('../test-fixtures/report.json')
 
 
 describe('Directory', function() {
@@ -37,15 +36,6 @@ describe('Directory', function() {
         expect(file(artifactFile)).not.to.be.empty
 
         const configFile = pathjoin(this._target, 'config.json.gz')
-        expect(file(configFile)).to.exist
-        expect(file(configFile)).not.to.be.empty
-    })
-
-    it('also works with an html target', async () => {
-        const dir = new Directory(this._target)
-        await dir.receive(reportFixtureWithHtml, {url: 'https://kumbier.it', output: ['html']})
-
-        const configFile = pathjoin(this._target, 'report.html.gz')
         expect(file(configFile)).to.exist
         expect(file(configFile)).not.to.be.empty
     })

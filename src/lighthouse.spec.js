@@ -10,7 +10,7 @@ const sinon = require('sinon')
 const sinonChai = require('sinon-chai')
 chai.use(sinonChai)
 
-const report = require('./test-fixtures/report-v3.json')
+const report = require('./test-fixtures/report.json')
 
 
 describe('Lighthouse', function() {

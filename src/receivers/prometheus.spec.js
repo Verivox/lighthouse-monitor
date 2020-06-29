@@ -7,7 +7,7 @@ const expect = chai.expect
 const prom = require('prom-client')
 
 const { Prometheus, PrometheusReport } = require('./prometheus')
-const reportFixture = require('../test-fixtures/report-v3.json')
+const reportFixture = require('../test-fixtures/report.json')
 
 chai.use(require('chai-fs'))
 

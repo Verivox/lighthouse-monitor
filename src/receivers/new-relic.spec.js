@@ -5,7 +5,7 @@
 const expect = require('chai').expect
 
 const { NewRelic, NewRelicOptions } = require('./new-relic')
-const reportFixture = require('../test-fixtures/report-v3.json')
+const reportFixture = require('../test-fixtures/report.json')
 
 const NewRelicOptionsValid = {
     apiKey: 'some-secret-key',

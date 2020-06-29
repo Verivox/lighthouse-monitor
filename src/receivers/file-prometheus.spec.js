@@ -10,7 +10,7 @@ const prom = require('prom-client')
 const tmpdir = require('os').tmpdir
 
 const { FilePrometheus } = require('./file-prometheus')
-const reportFixture = require('../test-fixtures/report-v3.json')
+const reportFixture = require('../test-fixtures/report.json')
 
 chai.use(require('chai-fs'))
 

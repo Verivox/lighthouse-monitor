@@ -13,7 +13,7 @@ const tmpdir = require('os').tmpdir
 
 const { TimestampedDirectory } = require('./timestamped-directory')
 
-const reportFixture = require('../test-fixtures/report-v3.json')
+const reportFixture = require('../test-fixtures/report.json')
 
 
 describe('TimestampedDirectory', function() {
