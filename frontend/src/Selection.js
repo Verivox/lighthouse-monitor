@@ -1,6 +1,6 @@
 import { Autocomplete } from './Autocomplete'
 import { PresetSelect } from './PresetSelect'
-import { UrlState } from "./UrlState"
+import { UrlState } from './UrlState'
 
 
 export class Selection extends EventTarget {

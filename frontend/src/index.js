@@ -14,7 +14,7 @@ helpBtn.onclick = () => {
     modal.open()
 }
 
-const resetBtn = document.getElementById("reset-btn")
+const resetBtn = document.getElementById('reset-btn')
 
 document.addEventListener('DOMContentLoaded', async ( ) => {
     try {

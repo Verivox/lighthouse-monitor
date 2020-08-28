@@ -1,4 +1,4 @@
-import {MDCTextField} from "@material/textfield";
+import {MDCTextField} from '@material/textfield';
 import {MDCMenu} from '@material/menu'
 
 class DropdownList extends EventTarget {
@@ -144,34 +144,34 @@ export class Autocomplete extends EventTarget {
     _registerEvents() {
         this.textField.addEventListener('keydown', (evt) => {
             switch (evt.code) {
-                case "ArrowDown":
-                    this.lastKeyEvent = "ArrowDown"
-                    this.listView.nextElement()
-                    this.inputElement.setAttribute('placeholder', this.items[this.listView.currentSelectedElement])
-                    break
-                case "ArrowUp":
-                    this.lastKeyEvent = "ArrowUp"
-                    this.listView.previousElement()
-                    this.inputElement.setAttribute('placeholder', this.items[this.listView.currentSelectedElement])
-                    break
-                case "NumpadEnter":
-                case "Enter":
-                    this.lastKeyEvent = "Enter"
-                    this.listView.confirmSelection()
-                    this.listView.close()
-                    this.inputElement.removeAttribute('placeholder')
-                    break
-                case "Tab":
-                    this.lastKeyEvent = "Tab"
-                    if (this.value) {
-                        this.dispatchEvent(new CustomEvent('selected', {detail: {value: this.value}}))
-                    } else {
-                        this.dispatchEvent(new Event('reset'))
-                    }
-                    this.listView.close()
-                    break
-                default:
-                    break
+            case 'ArrowDown':
+                this.lastKeyEvent = 'ArrowDown'
+                this.listView.nextElement()
+                this.inputElement.setAttribute('placeholder', this.items[this.listView.currentSelectedElement])
+                break
+            case 'ArrowUp':
+                this.lastKeyEvent = 'ArrowUp'
+                this.listView.previousElement()
+                this.inputElement.setAttribute('placeholder', this.items[this.listView.currentSelectedElement])
+                break
+            case 'NumpadEnter':
+            case 'Enter':
+                this.lastKeyEvent = 'Enter'
+                this.listView.confirmSelection()
+                this.listView.close()
+                this.inputElement.removeAttribute('placeholder')
+                break
+            case 'Tab':
+                this.lastKeyEvent = 'Tab'
+                if (this.value) {
+                    this.dispatchEvent(new CustomEvent('selected', {detail: {value: this.value}}))
+                } else {
+                    this.dispatchEvent(new Event('reset'))
+                }
+                this.listView.close()
+                break
+            default:
+                break
             }
         }, true)
 
@@ -193,7 +193,7 @@ export class Autocomplete extends EventTarget {
 
         this.textField.addEventListener('blur', () => {
             setTimeout(() => {
-                if (!this.inputElement.value && this.previousContent && this.lastKeyEvent !== "Tab") {
+                if (!this.inputElement.value && this.previousContent && this.lastKeyEvent !== 'Tab') {
                     this.inputElement.value = this.previousContent
                     this.mdcTextField.label_.float(true)
                 }
@@ -217,7 +217,7 @@ export class Autocomplete extends EventTarget {
         text = text.toLowerCase().trim()
         try {
             return this.items.filter(i => i.toLowerCase().trim().search(text) !== -1)
-        } catch {
+        } catch (e) {
             return []
         }
     }

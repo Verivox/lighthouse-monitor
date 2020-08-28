@@ -1,7 +1,7 @@
 import * as Mustache from 'mustache'
 import {MDCMenu} from '@material/menu'
 
-import {Selection} from "./Selection";
+import {Selection} from './Selection';
 
 const attachDownloadMenu = (view) => {
     const menu = document.querySelector(`.download_menu.${view}`)
@@ -61,7 +61,7 @@ class View {
 
     clearReport() {
         const container = document.getElementById(`render-${this.view}`)
-        container.innerHTML = ""
+        container.innerHTML = ''
     }
 
     reset() {
@@ -71,9 +71,9 @@ class View {
 }
 
 export class LeftView extends View {
-   constructor(lighthouseReports)  {
-       super('left', lighthouseReports)
-   }
+    constructor(lighthouseReports)  {
+        super('left', lighthouseReports)
+    }
 }
 
 export class RightView extends View {

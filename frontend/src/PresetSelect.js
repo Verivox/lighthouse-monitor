@@ -1,4 +1,4 @@
-import { MDCSelect } from "@material/select"
+import { MDCSelect } from '@material/select'
 
 export class PresetSelect extends EventTarget {
     constructor(view) {
@@ -67,7 +67,7 @@ export class PresetSelect extends EventTarget {
         const el = document.createElement('option')
         el.setAttribute('disabled', 'true')
         el.setAttribute('selected', 'true')
-        el.innerText = "Please choose a URL first"
+        el.innerText = 'Please choose a URL first'
         this.clear()
         this.disable()
         this.mdcSelect.label_.float(true)

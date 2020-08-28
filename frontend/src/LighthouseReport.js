@@ -15,7 +15,7 @@ export class LighthouseReports {
         const response = await fetch(`${this._baseUrl}/report/url/${encodeURIComponent(url)}/${encodeURIComponent(preset)}/${encodeURIComponent(date)}`)
         const content = await response.text()
         if (content) {
-           return JSON.parse(content)
+            return JSON.parse(content)
         }
     }
 

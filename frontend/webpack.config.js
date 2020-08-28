@@ -33,7 +33,9 @@ module.exports = {
                 use: ['style-loader', 'css-loader', {
                     loader: "sass-loader",
                     options: {
-                        includePaths: ["node_modules/", "src/"]
+                        sassOptions: {
+                            includePaths: ["node_modules/", "src/"]
+                        }
                     }
                 }]
             }

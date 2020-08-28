@@ -2,7 +2,7 @@ export class UrlState {
     static set(view, value) {
         const params = new URLSearchParams(window.location.search)
         params.set(view, value)
-        const newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?' + params.toString()
+        const newurl = window.location.protocol + '//' + window.location.host + window.location.pathname + '?' + params.toString()
         window.history.pushState({path:newurl},'',newurl);
     }
 
@@ -15,7 +15,7 @@ export class UrlState {
     static clear(view) {
         const params = new URLSearchParams(window.location.search)
         params.delete(view)
-        const newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?' + params.toString()
+        const newurl = window.location.protocol + '//' + window.location.host + window.location.pathname + '?' + params.toString()
         window.history.pushState({path:newurl},'',newurl);
     }
 }
