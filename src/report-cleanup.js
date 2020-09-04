@@ -5,7 +5,7 @@
 const Moment = require('moment')
 const debug = require('debug')('LIGHTMON:CLEANUP:DEBUG')
 const info = require('debug')('LIGHTMON:CLEANUP:INFO')
-const warn = require('debug')('LIGHTMON:CLEANUP:INFO')
+const warn = require('debug')('LIGHTMON:CLEANUP:WARNING')
 const fs = require('fs-extra')
 const path = require('path')
 
@@ -86,16 +86,16 @@ class ReportCleanup {
 
     async purgeEmptyDirs() {
         const reportDir = this.reports.baseDir
-        const subDirs = await fs.readdir(reportDir)
 
-        for (const entry of subDirs) {
+        for (const entry of fs.readdirSync(reportDir)) {
             const subdir = path.join(reportDir, entry)
+
             if (!fs.statSync(subdir).isDirectory()) {
-                return
+                continue
             }
 
             if (fs.readdirSync(subdir).length > 0) {
-                return
+                continue
             }
 
             try {

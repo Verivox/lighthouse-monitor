@@ -125,7 +125,7 @@ describe('ReportCleanup', function () {
     })
 
     it('removes empty directories in the reportDir', async () => {
-        this.reports = await Reports.setup(this._baseDir)
+        this.reports = await Reports.setup(this._baseDir, false)
         fs.unlinkSync(join(this._baseDir, dirWithoutContent, '.gitkeep'))
         const sut = new ReportCleanup({reports: this.reports, dryRun: false})
         expect(this._baseDir).be.a.directory().and.include.subDirs([dirWithoutContent])

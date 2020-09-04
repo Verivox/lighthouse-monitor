@@ -1,3 +1,10 @@
+# 2.2.0
+
+* Lightmon now uses a file system cache based on sqlite to decrease startup times dramatically
+
+* FIX: Cleanup now correctly removes empty directories
+
+
 # 2.1.0
 
 * Receivers can provide an `afterEvaluation()`-method, which will be called before shutting down

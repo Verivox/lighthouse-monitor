@@ -11,13 +11,13 @@ const packageJson = require('../package.json')
 // bootstraps programs and runs submodules
 async function run(options) {
     debug('LIGHTMON:CLEANUP:DEBUG')('Setting up reports handler...')
-    options.reports = await Reports.setup(options.reportDir)
+    options.reports = new Reports(options.reportDir, false)
     const cleanup = new ReportCleanup(options)
 
-    debug('LIGHTMON:CLEANUP:INFO')('Starting cleanup of reports')
+    debug('LIGHTMON:CLEANUP:INFO')('Cleaning up reports')
     await cleanup.clean()
 
-    debug('LIGHTMON:CLEANUP:INFO')('Starting deletion of empty directories')
+    debug('LIGHTMON:CLEANUP:INFO')('Deleting empty directories')
     await cleanup.purgeEmptyDirs()
 }
 

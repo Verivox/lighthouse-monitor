@@ -1,0 +1,99 @@
+#!/usr/bin/env node
+const chokidar = require('chokidar')
+const config = require('../config/default')
+const debug = require('debug')
+const fs = require('fs-extra')
+const path = require('path')
+const program = require('commander')
+const packageJson = require('../package.json')
+const {Report} = require('../src/report');
+const {ReportsCache} = require('../src/reports');
+
+
+program
+    .option('-r, --report-dir <reportDir>', 'report directory to clean up')
+    .version(packageJson.version, '-V, --version')
+    .option('-v, --verbose', 'show debugging information')
+    .parse(process.argv)
+
+const reportDir = program.reportDir || config.reportDir
+
+if (!fs.existsSync(reportDir) || !fs.statSync(reportDir).isDirectory()) {
+    console.error(`ERROR: reportDir does not exist or is not a directory: ${reportDir}. Exiting.\n`)
+    process.exit(2)
+}
+
+if (program.verbose) {
+    debug.enable('LIGHTMON:*')
+}
+
+
+const reportsCache = new ReportsCache(path.join(reportDir, 'cache.sqlite3'), false)
+
+debug('LIGHTMON:SYNC:INFO')('Sync started, setting up watcher')
+const watcher = chokidar.watch(reportDir, {
+    ignoreInitial: false,
+    persistent: false
+}).on('add', (changed) => {
+    if (!changed.endsWith('_config.json.gz')) {
+        return
+    }
+    const report = Report.fromFile(path.dirname(changed), path.basename(changed))
+    reportsCache.upsert(report)
+}).on('ready', () => {
+    debug('LIGHTMON:SYNC:INFO')('Finished adding watchers, checking for outdated entries')
+    for (const r of reportsCache.outdated()) {
+        debug('LIGHTMON:SYNC:DEBUG')(`Checking possibly deleted report ${r.id}`)
+
+        if (r.config === null) {
+            debug('LIGHTMON:SYNC:DEBUG')('+ Report does NOT exist, deleting from cache')
+            reportsCache.delete(r)
+        } else {
+            debug('LIGHTMON:SYNC:DEBUG')('+ Report exists, touching cache')
+            reportsCache.upsert(r)
+        }
+    }
+    debug('LIGHTMON:SYNC:INFO')('Done checking for outdated entries')
+}).on('error', err => {
+    debug('LIGHTMON:SYNC:INFO')('ERROR while syncing cache, continuing')
+    debug('LIGHTMON:SYNC:INFO')(err)
+}).on('unlink', (filepath) => {
+    if (!filepath.endsWith('_config.json.gz')) {
+        return
+    }
+
+    if (filepath.substr(0,reportDir.length) !== reportDir) {
+        debug('LIGHTMON:SYNC:WARNING')(`Report path does not start with reportDir, skipping: ${filepath}`)
+        return
+    }
+
+    const cutPos = reportDir.substr(-1) === '/' ? reportDir.length : reportDir.length + 1
+    let [created, filename] = filepath.substr(cutPos).split('/')
+    if (reportDir.substr(reportDir.length-1) === '/') {
+        created = created.substr(1)
+    }
+    created = created.split('_').join(':')     // equivalent to replaceAll('_', ':'), which is not yet supported in node
+    if (isNaN(Date.parse(created))) {
+        debug('LIGHTMON:SYNC:WARNING')(`Could not create a valid created date from string, skipping: ${created}`)
+        return
+    }
+
+    // presets may contain underscores, cause I was very stupid. This splits the filename correctly into the metadata.
+    const [name, ] = filename.split('_')
+    const preset = filename.substr(name.length + 1, filename.length - name.length - 1 - '_config.json.gz'.length)
+
+    const result = reportsCache.deleteByMeta(name, preset, created)
+})
+
+
+process.on('SIGINT', () => {
+    console.warn('handling SIGINT')
+    watcher.close()
+    process.exit(0)
+})
+
+
+// run indefinitely
+;(function runIndefinitely () {
+    setTimeout(runIndefinitely, 1E9);
+})();
