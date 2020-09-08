@@ -2,6 +2,7 @@
  * Part of Lightmon: https://github.com/verivox/lightmon
  * Licensed under MIT from the Verivox GmbH
  */
+const config = require('../config/default')
 const debug = require('debug')
 const path = require('path')
 const { spawn } = require('child_process');
@@ -10,25 +11,28 @@ const Sqlite3 = require('better-sqlite3')
 
 const {Report} = require('./report')
 
-const tableDDL = `
-CREATE TABLE IF NOT EXISTS reports (
-  id TEXT PRIMARY KEY,
-  url TEXT NOT NULL,
-  name TEXT NOT NULL,
-  preset TEXT NOT NULL,
-  date TEXT NOT NULL,
-  path TEXT NOT NULL,
-  lastseen TEXT
-)
-`
+const dbInit = [
+    `CREATE TABLE IF NOT EXISTS reports (
+       id TEXT PRIMARY KEY,
+       url TEXT NOT NULL,
+       name TEXT NOT NULL,
+       preset TEXT NOT NULL,
+       date TEXT NOT NULL,
+       path TEXT NOT NULL,
+       lastseen TEXT
+    )`,
+    'CREATE INDEX IF NOT EXISTS idx_url ON reports (url)',
+    'CREATE INDEX IF NOT EXISTS idx_url_and_preset ON reports (url, preset)',
+    'CREATE INDEX IF NOT EXISTS idx_url_and_preset_and_date ON reports (url, preset, date)'
+]
 
 
 class ReportsCache {
-    constructor(path, readonly = false) {
+    constructor(cachePath, readonly = false) {
         try {
-            this._db = new Sqlite3(path, {readonly})
+            this._db = new Sqlite3(cachePath, {readonly})
         } catch (e) {
-            console.error(`ERROR: Could not open cache database at ${path}`)
+            console.error(`ERROR: Could not open cache database at ${cachePath}`)
             console.error(e)
             process.exit(1)
         }
@@ -38,7 +42,11 @@ class ReportsCache {
 
         // this enables better concurrency while the file watcher syncs the database cache
         this._db.pragma('journal_mode=WAL')
-        this._db.prepare(tableDDL).run()
+
+        // Ensure database structure and indexes are set
+        for (const stmt of dbInit) {
+            this._db.prepare(stmt).run()
+        }
     }
 
     updateCurrentLastseen(value = (new Date()).toISOString()) {
@@ -97,6 +105,27 @@ class ReportsCache {
         return this._all()
     }
 
+    uniqueUrls() {
+        return this._db.prepare('SELECT DISTINCT url FROM reports ORDER BY url').all().map(row => row.url)
+    }
+
+    presetsForUrl(url) {
+        return this._db.prepare('SELECT DISTINCT preset FROM reports WHERE url=? ORDER BY preset').all(url).map(row => row.preset)
+    }
+
+    timesForUrlAndPreset(url, preset) {
+        let dict = {}
+        for (const row of this._db.prepare('SELECT date, id FROM reports WHERE url=? AND preset=? ORDER BY date DESC').all(url, preset)) {
+            dict[row.date] = row.id
+        }
+        return dict
+    }
+
+    metadataForUrlAndPresetAndTime(url, preset, time) {
+        return this._db.prepare('SELECT id, url, name, preset, date, path FROM reports WHERE url = ? AND preset = ? AND date = ?')
+            .all(url, preset, time).map(row => new Report(row))
+    }
+
     outdated() {
         return this._all(`lastseen<'${this._currentLastseen}'`)
     }
@@ -128,22 +157,24 @@ class ReportsCacheDisabled {
 
 
 class Reports {
-    constructor(baseDir, setupWatcher = true, cache = null) {
+    constructor(baseDir, setupWatcher = true, cache = null, shouldRestartCacheSync = true) {
         this._baseDir = baseDir
         fs.ensureDirSync(baseDir)
-        this._reportsCache = cache === null ? new ReportsCache(path.join(baseDir, 'cache.sqlite3')) : cache
+        this._reportsCache = cache === null ? new ReportsCache(path.join(config.cacheDir, 'lightmon-cache.sqlite3')) : cache
         if (setupWatcher) {
-            this._setupWatcher()
+            this._setupCacheSync()
         }
+        this._watcherRestarts = 0
+        this._shouldRestartCacheSync = shouldRestartCacheSync
     }
 
     static async setup(baseDir, cache = null) {
         const reports = new Reports(baseDir, false, cache)
-        await reports._setupWatcher(baseDir)
+        await reports._setupCacheSync(baseDir)
         return reports
     }
 
-    _setupWatcher(dir = this._baseDir) {
+    _setupCacheSync(dir = this._baseDir) {
         this._watcher = spawn(path.join(__dirname, '..', 'bin', 'sync-cache'), ['--report-dir', dir, '--verbose'], {
             detached: false,
             stdio: ['pipe', 'inherit', 'inherit']
@@ -152,6 +183,16 @@ class Reports {
         //this._watcher.stderr.on('data', (data) => debug('LIGHTMON:SYNC:ERROR')(`${data.trim()}`))
         this._watcher.on('close', (code) => {
             debug('LIGHTMON:WARNING')(`Sync childprocess exited with code ${code}`)
+            if (this._watcherRestarts > 3) {
+                throw new Error('I would have to restart the sync process for more than 3 times, something is wrong. Exiting.')
+            }
+            if (this._shouldRestartCacheSync) {
+                this._watcherRestarts++
+                debug('LIGHTMON:WARNING')('Restarting cache sync process...')
+                this._setupCacheSync(dir)
+            } else {
+                debug('LIGHTMON:WARNING')('shouldRestartCacheSync is false - not restarting sync process.')
+            }
         })
     }
 
@@ -161,6 +202,22 @@ class Reports {
 
     all() {
         return this._reportsCache.all()
+    }
+
+    uniqueUrls() {
+        return this._reportsCache.uniqueUrls()
+    }
+
+    presetsForUrl(url) {
+        return this._reportsCache.presetsForUrl(url)
+    }
+
+    timesForUrlAndPreset(url, preset) {
+        return this._reportsCache.timesForUrlAndPreset(url, preset)
+    }
+
+    metadataForUrlAndPresetAndTime(url, preset, time) {
+        return this._reportsCache.metadataForUrlAndPresetAndTime(url, preset, time)
     }
 
     /**

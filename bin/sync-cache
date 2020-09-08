@@ -12,11 +12,13 @@ const {ReportsCache} = require('../src/reports');
 
 program
     .option('-r, --report-dir <reportDir>', 'report directory to clean up')
+    .option('-c, --cache-dir <cacheDir>', 'directory where the cache lives in')
     .version(packageJson.version, '-V, --version')
     .option('-v, --verbose', 'show debugging information')
     .parse(process.argv)
 
 const reportDir = program.reportDir || config.reportDir
+const cacheDir = program.cacheDir || config.cacheDir
 
 if (!fs.existsSync(reportDir) || !fs.statSync(reportDir).isDirectory()) {
     console.error(`ERROR: reportDir does not exist or is not a directory: ${reportDir}. Exiting.\n`)
@@ -28,16 +30,20 @@ if (program.verbose) {
 }
 
 
-const reportsCache = new ReportsCache(path.join(reportDir, 'cache.sqlite3'), false)
+const reportsCache = new ReportsCache(path.join(cacheDir, 'lightmon-cache.sqlite3'), false)
 
 debug('LIGHTMON:SYNC:INFO')('Sync started, setting up watcher')
 const watcher = chokidar.watch(reportDir, {
+    ignored: (candidate) => {
+        if (fs.existsSync(candidate) && fs.lstatSync(candidate).isDirectory()) {
+            return false
+        }
+        return !candidate.endsWith('_config.json.gz')
+    },
     ignoreInitial: false,
-    persistent: false
+    persistent: true
 }).on('add', (changed) => {
-    if (!changed.endsWith('_config.json.gz')) {
-        return
-    }
+    debug('LIGHTMON:SYNC:DEBUG')(`Adding report file ${changed}`)
     const report = Report.fromFile(path.dirname(changed), path.basename(changed))
     reportsCache.upsert(report)
 }).on('ready', () => {
@@ -82,12 +88,12 @@ const watcher = chokidar.watch(reportDir, {
     const [name, ] = filename.split('_')
     const preset = filename.substr(name.length + 1, filename.length - name.length - 1 - '_config.json.gz'.length)
 
-    const result = reportsCache.deleteByMeta(name, preset, created)
+    reportsCache.deleteByMeta(name, preset, created)
 })
 
 
 process.on('SIGINT', () => {
-    console.warn('handling SIGINT')
+    debug('LIGHTMON:SYNC:INFO')('Caught SIGINT, finishing up')
     watcher.close()
     process.exit(0)
 })

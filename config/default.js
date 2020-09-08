@@ -138,7 +138,17 @@ const WebserverOptions = {
  */
 const receivers = []
 
+/**
+ * The directory where reports are stored.
+ * @type {string}
+ */
 const reportDir = process.env.REPORT_DIR || localConfig.reportDir || path.join(os.tmpdir(), 'lightmon')
+
+/**
+ * The directory, in which the cache for the reports are stored
+ * @type {string|*}
+ */
+const cacheDir = process.env.CACHE_DIR || localConfig.cacheDir || os.tmpdir()
 
 const prometheusMetricsFile = path.join(WebserverOptions.publicFolder, 'metrics', 'index.html')
 const jsonMetricsFile = path.join(WebserverOptions.publicFolder, 'metrics.json')
@@ -189,7 +199,9 @@ const config = Object.assign(
         prometheusMetricsFile,
         jsonMetricsFile,
         lockFile,
-        lockFileOptions
+        lockFileOptions,
+        cacheDir,
+        reportDir
     },
     localConfig
 )

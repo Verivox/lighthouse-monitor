@@ -1,7 +1,13 @@
+# 2.3.0
+
+* Higher performance by better utilizing the sqlite database report cache
+* New option to define the report cache via `cacheDir` - now defaults to `os.tmpdir()`
+* cache dir file renamed to `lightmon-cache.sqlite3`
+
+
 # 2.2.0
 
 * Lightmon now uses a file system cache based on sqlite to decrease startup times dramatically
-
 * FIX: Cleanup now correctly removes empty directories
 
 

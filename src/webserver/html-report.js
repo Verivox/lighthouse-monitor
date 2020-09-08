@@ -4,7 +4,7 @@
  */
 const config = require('../../config/default')
 const express = require('express')
-const { Reports } = require('../reports')
+const { Reports, ReportsCache } = require('../reports')
 const mime = require('mime/lite')
 
 const mapToObj = m => {
@@ -24,9 +24,9 @@ class HtmlReport {
     middleware() {
         this.router.route('/report').get(this._all.bind(this))
         this.router.route('/report/url').get(this._url.bind(this))
-        this.router.route('/report/url/:url/').get(this._profileByUrl.bind(this))
-        this.router.route('/report/url/:url/:profile/').get(this._reportByUrlAndPreset.bind(this))
-        this.router.route('/report/url/:url/:profile/:timestamp').get(this._reportByUrlPresetTimestamp.bind(this))
+        this.router.route('/report/url/:url/').get(this._presetByUrl.bind(this))
+        this.router.route('/report/url/:url/:preset/').get(this._reportByUrlAndPreset.bind(this))
+        this.router.route('/report/url/:url/:preset/:timestamp').get(this._reportByUrlPresetTimestamp.bind(this))
         this.router.route('/report/:id').get(this._get.bind(this))
         this.router.route('/report/:id/artifacts').get(this._getArtifact.bind(this))
         this.router.route('/report/:id/html').get(this._getHtml.bind(this))
@@ -47,46 +47,26 @@ class HtmlReport {
 
     _url(req, res) {
         return res.send(
-            this.reports
-                .withoutInternals()
-                .map(report => report.url)
-                .filter((url, i, self) => self.indexOf(url) === i)
-                .sort()
+            this.reports.uniqueUrls()
         )
     }
 
-    _profileByUrl(req, res) {
+    _presetByUrl(req, res) {
         return res.send(
-            this.reports
-                .withoutInternals()
-                .filter(report => report.url === req.params.url)
-                .map(report => report.preset)
-                .filter((preset, i, self) => self.indexOf(preset) === i)
-                .sort()
+            this.reports.presetsForUrl(req.params.url)
         )
     }
 
     _reportByUrlAndPreset(req, res) {
         return res.send(
-            mapToObj(
-                new Map(
-                    this.reports
-                        .withoutInternals()
-                        .filter(report => report.url === req.params.url)
-                        .filter(report => report.preset === req.params.profile)
-                        .map(report => [report.date, report.id])
-                )
-            )
+            this.reports.timesForUrlAndPreset(req.params.url, req.params.preset)
         )
     }
 
     _reportByUrlPresetTimestamp(req, res) {
         return res.send(
-            this.reports
-                .withoutInternals()
-                .filter(report => report.url === req.params.url)
-                .filter(report => report.preset === req.params.profile)
-                .filter(report => report.date === req.params.timestamp)[0]
+            this.reports.metadataForUrlAndPresetAndTime(req.params.url, req.params.preset, req.params.timestamp)
+                .map(report => report.withoutInternals())[0]
         )
     }
 
