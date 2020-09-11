@@ -32,8 +32,8 @@ if (program.verbose) {
 
 const reportsCache = new ReportsCache(path.join(cacheDir, 'lightmon-cache.sqlite3'), false)
 
-debug('LIGHTMON:SYNC:INFO')('Sync started, setting up watcher')
-const watcher = chokidar.watch(reportDir, {
+
+const chokidarOptions = {
     ignored: (candidate) => {
         if (fs.existsSync(candidate) && fs.lstatSync(candidate).isDirectory()) {
             return false
@@ -42,7 +42,18 @@ const watcher = chokidar.watch(reportDir, {
     },
     ignoreInitial: false,
     persistent: true
-}).on('add', (changed) => {
+}
+
+if (config.reportsPollingEverySec === false) {
+    chokidarOptions['usePolling'] = false
+} else {
+    chokidarOptions['usePolling'] = true
+    chokidarOptions['interval'] = config.reportsPollingEverySec * 1000
+    chokidarOptions['binaryInterval'] = config.reportsPollingEverySec * 1000
+}
+
+debug('LIGHTMON:SYNC:INFO')('Sync started, setting up watcher')
+const watcher = chokidar.watch(reportDir, chokidarOptions).on('add', (changed) => {
     debug('LIGHTMON:SYNC:DEBUG')(`Adding report file ${changed}`)
     const report = Report.fromFile(path.dirname(changed), path.basename(changed))
     reportsCache.upsert(report)

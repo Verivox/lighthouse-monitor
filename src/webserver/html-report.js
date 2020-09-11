@@ -4,15 +4,9 @@
  */
 const config = require('../../config/default')
 const express = require('express')
-const { Reports, ReportsCache } = require('../reports')
+const { Reports } = require('../reports')
 const mime = require('mime/lite')
 
-const mapToObj = m => {
-    return Array.from(m).reduce((obj, [key, value]) => {
-        obj[key] = value
-        return obj
-    }, {})
-}
 
 class HtmlReport {
     constructor({ Webserver }) {

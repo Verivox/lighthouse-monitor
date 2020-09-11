@@ -153,6 +153,23 @@ const cacheDir = process.env.CACHE_DIR || localConfig.cacheDir || os.tmpdir()
 const prometheusMetricsFile = path.join(WebserverOptions.publicFolder, 'metrics', 'index.html')
 const jsonMetricsFile = path.join(WebserverOptions.publicFolder, 'metrics.json')
 
+
+/**
+ * How often do we expect reports? /healthz will return a 500, if no report has been seen in that time
+ * defaults to once every 25h
+ * @type {number}
+ */
+const expectedLastReportInSec = localConfig.expectedLastReportInSec || 25*60*60
+
+
+/**
+ * If the reports are saved on a network folder, the filesystem watcher will most likely not work.
+ * This instructs chokidar to use polling instead. Set to a non-number to disable polling.
+ * @type {number|false}
+ */
+const reportsPollingEverySec = false
+
+
 receivers.push(
     new TimestampedDirectory(reportDir),
     new FilePrometheus(prometheusMetricsFile)
@@ -201,7 +218,9 @@ const config = Object.assign(
         lockFile,
         lockFileOptions,
         cacheDir,
-        reportDir
+        reportDir,
+        expectedLastReportInSec,
+        reportsPollingEverySec
     },
     localConfig
 )

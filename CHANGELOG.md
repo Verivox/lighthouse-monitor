@@ -1,3 +1,9 @@
+# 2.4.0
+
+* New option `reportsPollingEverySec` to poll the filesystem every X seconds, specifically for network shares with limited available inode watcher settings
+* New endpoint `/healthz`, which looks when the last report has been registered and returns a 500, if a configurable amount of time has passed since `expectedLastReportInSec`
+
+
 # 2.3.0
 
 * Higher performance by better utilizing the sqlite database report cache

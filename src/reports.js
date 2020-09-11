@@ -121,6 +121,11 @@ class ReportsCache {
         return dict
     }
 
+    youngerThan(date) {
+        return this._db.prepare('SELECT id, url, name, preset, date, path FROM reports WHERE date>?')
+            .all(date).map(row => new Report(row))
+    }
+
     metadataForUrlAndPresetAndTime(url, preset, time) {
         return this._db.prepare('SELECT id, url, name, preset, date, path FROM reports WHERE url = ? AND preset = ? AND date = ?')
             .all(url, preset, time).map(row => new Report(row))
@@ -231,6 +236,10 @@ class Reports {
         return this.all().filter(report => {
             return new Date(report.date) < date
         })
+    }
+
+    youngerThan(date) {
+        return this._reportsCache.youngerThan(date)
     }
 
     delete(report) {

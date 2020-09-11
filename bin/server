@@ -1,11 +1,14 @@
 #!/usr/bin/env node
-const { Webserver, StaticFiles, HtmlReport } = require('../src/webserver')
+const config = require('../config/default')
+const { Reports } = require('../src/reports')
+const { Webserver, StaticFiles, HtmlReport, Healthz } = require('../src/webserver')
 const { WebserverOptions } = require('../config/default')
 
 // bootstraps programs and runs submodules
 async function run() {
     new StaticFiles({ ...WebserverOptions, Webserver })
     new HtmlReport({ Webserver })
+    new Healthz({ Webserver, reports: new Reports(config.reportDir, false, null, false), expectedLastReportInSec: config.expectedLastReportInSec})
     new Webserver({ ...WebserverOptions }).start()
 }
 
