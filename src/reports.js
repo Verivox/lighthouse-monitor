@@ -180,7 +180,7 @@ class Reports {
     }
 
     _setupCacheSync(dir = this._baseDir) {
-        this._watcher = spawn(path.join(__dirname, '..', 'bin', 'sync-cache'), ['--report-dir', dir, '--verbose'], {
+        this._watcher = spawn('node', [path.join(__dirname, '..', 'bin', 'sync-cache'), '--report-dir', dir, '--verbose'], {
             detached: false,
             stdio: ['pipe', 'inherit', 'inherit']
         })
