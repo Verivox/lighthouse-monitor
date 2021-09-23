@@ -116,14 +116,14 @@ class LighthouseReport {
         this.add('performance.cumulative-layout-shift.score', lhr.audits['cumulative-layout-shift'].score)
         this.add('performance.cumulative-layout-shift.value', lhr.audits['cumulative-layout-shift'].numericValue)
 
-        this.add('performance.first-cpu-idle.score', lhr.audits['first-cpu-idle'].score)
-        this.add('performance.first-cpu-idle.value', lhr.audits['first-cpu-idle'].numericValue)
+        this.add('performance.first-cpu-idle.score', 0)
+        this.add('performance.first-cpu-idle.value', 0)
 
         this.add('performance.interactive.score', lhr.audits['interactive'].score)
         this.add('performance.interactive.value', lhr.audits['interactive'].numericValue)
 
-        this.add('performance.estimated-input-latency.score', lhr.audits['estimated-input-latency'].score)
-        this.add('performance.estimated-input-latency.value', lhr.audits['estimated-input-latency'].numericValue)
+        this.add('performance.estimated-input-latency.score', 0)
+        this.add('performance.estimated-input-latency.value', 0)
 
         this.add('performance.byte-weight.total.score', lhr.audits['total-byte-weight'].score)
         this.add('performance.byte-weight.total.value', lhr.audits['total-byte-weight'].numericValue)
