@@ -69,7 +69,7 @@ const presets = {
         presetDefault,
         {
             preset: 'mobile_mid-slow',
-            emulatedFormFactor: 'mobile',
+            formFactor: 'mobile',
             throttlingMethod: 'simulate',
             throttling: {
                 rttMs: 150,
@@ -83,7 +83,7 @@ const presets = {
         presetDefault,
         {
             preset: 'mobile_mid-fast',
-            emulatedFormFactor: 'mobile',
+            formFactor: 'mobile',
             throttlingMethod: 'simulate',
             throttling: {
                 rttMs: 28,
@@ -97,7 +97,14 @@ const presets = {
         presetDefault,
         {
             preset: 'desktop-fast',
-            emulatedFormFactor: 'desktop',
+            formFactor: 'desktop',
+	        screenEmulation: {
+	            mobile: false,
+		        width: 1350,
+		        height: 940,
+		        deviceScaleFactor: 1,
+		        disabled: false
+	        },	        
             throttlingMethod: 'simulate',
             throttling: {
                 rttMs: 28,
