@@ -70,6 +70,14 @@ const presets = {
         {
             preset: 'mobile_mid-slow',
             formFactor: 'mobile',
+            screenEmulation: {
+                mobile: true,
+                width: 360,
+                height: 640,
+                deviceScaleFactor: 2.625,
+                disabled: false,
+            },
+            emulatedUserAgent: 'Mozilla/5.0 (Linux; Android 7.0; Moto G (4)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4590.2 Mobile Safari/537.36 Chrome-Lighthouse',
             throttlingMethod: 'simulate',
             throttling: {
                 rttMs: 150,
@@ -84,6 +92,14 @@ const presets = {
         {
             preset: 'mobile_mid-fast',
             formFactor: 'mobile',
+            screenEmulation: {
+                mobile: true,
+                width: 360,
+                height: 640,
+                deviceScaleFactor: 2.625,
+                disabled: false,
+            },
+            emulatedUserAgent: 'Mozilla/5.0 (Linux; Android 7.0; Moto G (4)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4590.2 Mobile Safari/537.36 Chrome-Lighthouse',
             throttlingMethod: 'simulate',
             throttling: {
                 rttMs: 28,
@@ -105,11 +121,12 @@ const presets = {
 		        deviceScaleFactor: 1,
 		        disabled: false
 	        },	        
+            emulatedUserAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4590.2 Safari/537.36 Chrome-Lighthouse',
             throttlingMethod: 'simulate',
             throttling: {
                 rttMs: 28,
                 throughputKbps: 16000,
-                cpuSlowdownMultiplier: 4
+                cpuSlowdownMultiplier: 1
             }
         }
     )
