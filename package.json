@@ -54,7 +54,7 @@
         "fs-extra": "^9.0.1",
         "lighthouse": "^8.5.0",
         "mime": "^2.4.6",
-        "moment": "^2.27.0",
+        "moment": "^2.29.4",
         "prom-client": "^12.0.0",
         "proper-lockfile": "^4.1.1",
         "puppeteer": "^10.4.0",
