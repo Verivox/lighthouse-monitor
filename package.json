@@ -50,7 +50,7 @@
         "commander": "^6.1.0",
         "cross-env": "^7.0.2",
         "debug": "^4.1.1",
-        "express": "^4.17.1",
+        "express": "^4.17.3",
         "fs-extra": "^9.0.1",
         "lighthouse": "^8.5.0",
         "mime": "^2.4.6",
